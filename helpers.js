@@ -19,7 +19,6 @@ function sqlToCharacter(results){
     results.levelSeven = results.levelSeven.split("_");
     results.levelEight = results.levelEight.split("_");
     results.levelNine = results.levelNine.split("_");
-    results.levelTen = results.levelTen.split("_");
     
     return results;
 }
