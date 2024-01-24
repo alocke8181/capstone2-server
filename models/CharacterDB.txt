@@ -3,7 +3,7 @@
 
 
 id : serial autoincrementing
-creator_ID : relational
+creatorID : relational
 
 name : string 
 race : string - specifically the possible values for the api 
@@ -14,14 +14,13 @@ alignment : string
 level : intg
 exp : intg
 
-str : intg
-dex : intg
-con : intg
-int : intg
-wis : intg
-cha : intg
+strength : intg
+dexterity : intg
+constitution : intg
+intelligence : intg
+wisdom : intg
+charisma : intg
 
-profBonus : intg
 savingProfs : string - each proficiency seperate with '_' eg "dexterity_charisma"
 skillProfs : string - underscore seperated
 jackOfAllTrades : boolean
@@ -34,6 +33,7 @@ hitDiceMax : intg
 hitDiceCurr : intg
 deathSaveSuccess : intg
 deathFaveFail : intg
+altResources : string - turn from objects to strings
 
 personality : string - limit 300 chars
 ideals : string - limit 300 chars
@@ -44,7 +44,7 @@ traits : string - underscore seperated api indexes sorted alphabetically
 languages : string - underscore seperated
 equipProfs : string - underscore seperated
 
-equipment : string - underscore seperated pairs of hyphenated items and amounts
+equipment : string - * seperated pairs of hyphenated items and amounts
 copper : intg
 silver : intg
 gold : intg
@@ -57,12 +57,12 @@ spellAtkBonus : intg
 
 cantrips : string - underscore seperated api index
 levelOne : string - USAI
-levelOneOeft : intg
+levelOneLeft : intg
 //Repeat for all levels
 
 age : intg
 height : string
-weight : string
+wght : string
 eyes : string
 skin : string
 hair : string

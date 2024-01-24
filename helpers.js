@@ -25,8 +25,12 @@ function sqlToCharacter(results){
 
 //Converts attr's of the object from js arrays/objects to sql format
 //Export to helpers
-function characterToSQL(character){
+function characterToSQL(characterSQL){
     //TODO
+}
+
+function stringToList(string){
+    return string.split('_');
 }
 
 //Export to helpers
