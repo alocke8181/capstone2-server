@@ -70,7 +70,25 @@ class Character{
         this.levelTwoLeft = charSQL.levelTwoLeft;
         this.levelThree = charSQL.levelThree.split('_');
         this.levelThreeLeft = charSQL.levelThreeLeft;
-        
+        this.levelFour = charSQL.levelFour.split('_');
+        this.levelFourLeft = charSQL.levelFourLeft;
+        this.levelFive = charSQL.levelFive.split('_');
+        this.levelFiveLeft = charSQL.levelFiveLeft;
+        this.levelSix = charSQL.levelSix.split('_');
+        this.levelSixLeft = charSQL.levelSixLeft;
+        this.levelSeven = charSQL.levelSeven.split('_');
+        this.levelSevenLeft = charSQL.levelSevenLeft;
+        this.levelEight = charSQL.levelEight.split('_');
+        this.levelEightLeft = charSQL.levelEightLeft;
+        this.levelNine = charSQL.levelNine.split('_');
+        this.levelNineLeft = charSQL.levelNineLeft;
+
+        this.age = charSQL.age;
+        this.height = charSQL.height;
+        this.weight = charSQL.weight;
+        this.backstory = charSQL.backstory;
+        this.appearance = charSQL.appearance;
+        this.allies = charSQL.allies;
 
     }
 }

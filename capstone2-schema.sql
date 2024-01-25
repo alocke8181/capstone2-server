@@ -7,51 +7,6 @@ CREATE TABLE users (
     isAdmin BOOLEAN NOT NULL DEFAULT FALSE
 )
 
-CREATE TABLE custom_traits(
-    id SERIAL PRIMARY KEY,
-    charID INTEGER NOT NULL
-        REFERENCES characters ON DELETE CASCADE,
-    name TEXT,
-    source TEXT,
-    description TEXT,
-)
-
-CREATE TABLE chars_custom_traits(
-    char_id INTEGER
-        REFERENCES characters ON DELETE CASCADE,
-    trait_id INTEGER
-        REFERENCES custom_traits ON DELETE CASCADE,
-    PRIMARY KEY (user_id, char_id)
-)
-
-CREATE TABLE custom_attacks(
-    id SERIAL PRIMARY KEY,
-    charID INTEGER NOT NULL
-        REFERENCES characters ON DELETE CASCADE,
-    attackSkill TEXT,
-    attackMod INTEGER,
-    isProf BOOLEAN,
-    dmgDice INTEGER,
-    numDice INTEGER,
-    dmgSkill TEXT,
-    dmgMod INTEGER,
-    dmgType TEXT,
-    altDmgDice INTEGER,
-    altNumDice INTEGER,
-    altDmgSkill TEXT,
-    altDmgMod INTEGER,
-    altDmgType TEXT,
-    description TEXT
-)
-
-CREATE TABLE chars_custom_attacks(
-    char_id INTEGER
-        REFERENCES characters ON DELETE CASCADE,
-    attack_id INTEGER
-        REFERENCES custom_attacks ON DELETE CASCADE,
-    PRIMARY KEY (user_id, char_id)
-)
-
 CREATE TABLE characters(
     id SERIAL PRIMARY KEY,
     creatorID INTEGER NOT NULL
@@ -59,7 +14,7 @@ CREATE TABLE characters(
     charName VARCHAR(100) NOT NULL,
     race TEXT,
     subrace TEXT,
-    class TEXT,
+    className TEXT,
     alignment TEXT,
     lvl INTEGER,
     exp INTEGER CHECK (exp >= 0),
@@ -75,6 +30,7 @@ CREATE TABLE characters(
     savingProfs TEXT,
     jackOfAllTrades BOOLEAN DEFAULT FALSE,
 
+    armorClass INTEGER,
     hpMax INTEGER CHECK (hpMax >= 0),
     hpCurr INTEGER CHECK (hpCurr >= 0),
     hpTemp INTEGER CHECK (hpTemp >= 0),
@@ -88,6 +44,7 @@ CREATE TABLE characters(
     flaws VARCHAR(300),
 
     traits TEXT,
+    features TEXT,
     languages TEXT,
     equipProfs TEXT,
 
@@ -124,10 +81,7 @@ CREATE TABLE characters(
 
     age INTEGER,
     height VARCHAR(10),
-    wght VARCHAR(10),
-    eyes VARCHAR(10),
-    skin VARCHAR(10),
-    hair VARCHAR(10),
+    weight VARCHAR(10),
     backstory VARCHAR(1000),
     appearance VARCHAR(1000),
     allies VARCHAR(300)
@@ -138,5 +92,54 @@ CREATE TABLE users_chars (
         REFERENCES users ON DELETE CASCADE,
     char_id INTEGER
         REFERENCES characters ON DELETE CASCADE
+    PRIMARY KEY (user_id, char_id)
+)
+
+CREATE TABLE custom_traits(
+    id SERIAL PRIMARY KEY,
+    charID INTEGER NOT NULL
+        REFERENCES characters ON DELETE CASCADE,
+    name TEXT,
+    source TEXT,
+    description TEXT,
+)
+
+CREATE TABLE chars_custom_traits(
+    char_id INTEGER
+        REFERENCES characters ON DELETE CASCADE,
+    trait_id INTEGER
+        REFERENCES custom_traits ON DELETE CASCADE,
+    PRIMARY KEY (user_id, char_id)
+)
+
+CREATE TABLE custom_attacks(
+    id SERIAL PRIMARY KEY,
+    charID INTEGER NOT NULL
+        REFERENCES characters ON DELETE CASCADE,
+    name TEXT,
+    attackSkill TEXT,
+    attackMod INTEGER,
+    isProf BOOLEAN,
+    dmgDice INTEGER,
+    numDice INTEGER,
+    dmgSkill TEXT,
+    dmgMod INTEGER,
+    dmgType TEXT,
+    altDmgDice INTEGER,
+    altNumDice INTEGER,
+    altDmgSkill TEXT,
+    altDmgMod INTEGER,
+    altDmgType TEXT,
+    description TEXT,
+    savingSkill TEXT,
+    savingEffect TEXT,
+
+)
+
+CREATE TABLE chars_custom_attacks(
+    char_id INTEGER
+        REFERENCES characters ON DELETE CASCADE,
+    attack_id INTEGER
+        REFERENCES custom_attacks ON DELETE CASCADE,
     PRIMARY KEY (user_id, char_id)
 )

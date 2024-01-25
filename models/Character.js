@@ -1,12 +1,118 @@
 
 
 
-// const db = require('../db);
-// const {BadRequestError, NotFoundError, ExpressError } = require('../expressError');
-const { NotFoundError } = require('../expressError');
+const db = require('../db');
+const dndApi = require('../dndApi');
+const {BadRequestError, NotFoundError, ExpressError } = require('../expressError');
 const {characterToSQL, sqlToCharacter, sqlForUpdate} = require('../helpers');
 
 class Character {
+
+    constructor(charSQL){
+        this.id = charSQL.id;
+        this.creatorID = charSQL.creatorID;
+        this.name = charSQL.name;
+        this.race = charSQL.race;
+        this.subrace =charSQL.subrace;
+        this.className = charSQL.className;
+        this.background = charSQL.background;
+        this.alignment = charSQL.alignment;
+        this.level = charSQL.level;
+        this.exp = charSQL.exp;
+
+        this.str = charSQL.strength;
+        this.strMod = Math.floor((this.str -10)/2);
+        this.dex = charSQL.dexterity;
+        this.dexMod = Math.floor((this.dex -10)/2);
+        this.con = charSQL.constitution;
+        this.conMod = Math.floor((this.con -10)/2);
+        this.int = charSQL.intelligence;
+        this.intMod = Math.floor((this.int -10)/2);
+        this.wis = charSQL.wisdom;
+        this.wisMod = Math.floor((this.wis -10)/2);
+        this.cha = charSQL.charisma;
+        this.chaMod = Math.floor((this.cha -10)/2);
+
+        this.profBonus = 0; //To be calc'd later from class progression
+        this.savingProfs = charSQL.savingProfs.split('_');
+        this.skillProfs = charSQL.skillProfs.split('_');
+        this.jackOfAllTrades = false; //To be calc'd based on skills
+        this.passPerc = this.wisMod + 10;
+
+        this.speed = (this.dexMod * 5); //basespeed from race + (dexmod * 5)
+        this.initiative = this.dexMod
+        this.armorClass = charSQL.armorClass; //Calculate this later
+        this.hpMax = charSQL.hpMax;
+        this.hpCurr = charSQL.hpCurr;
+        this.hpTemp = charSQL.hpTemp;
+        this.hitDice = 0; //come from class
+        this.hitDiceMax = this.level;
+        this.hitDiceCurr = charSQL.hitDiceCurr;
+        this.deathSaveSuccess = charSQL.deathSaveSuccess;
+        this.deathSaveFail = charSQL.deathSaveFail;
+        this.altResources = charSQL.altResources.split('_'); //Convert from string to list of objects
+
+        this.personality = charSQL.personality;
+        this.ideals = charSQL.ideals;
+        this.bonds = charSQL.bonds;
+        this.flaws = charSQL.flaws;
+
+        this.traits = charSQL.traits.split('_'); //redo later to turn each into a trait object
+        this.features = charSQL.features.split('_'); //redo later to turn each into a trait object
+        this.languages = charSQL.languages.split('_');
+        this.equipProfs = charSQL.equipProfs.split('_');
+
+        this.equipment = charSQL.equipment.split('_'); //Redo to convert into equipment objects with name and number
+        this.copper = charSQL.copper;
+        this.silver = charSQL.silver;
+        this.gold = charSQL.gold;
+
+        this.attacks = charSQL.attacks.split('_') //Redo to convert into atk objects, pull from db and spell list
+        this.spellAbility = charSQL.spellAbility;
+        this.spellSaveDC = charSQL.spellSaveDC;
+        this.spellAtkBonus = charSQL.spellAtkBonus;
+
+        this.cantripsKnown = 0;
+        this.cantrips = charSQL.cantrips.split('_'); //All lists of spells should be converted to objects
+        this.levelOne = charSQL.levelOne.split('_');
+        this.levelOneSlots = 0;
+        this.levelOneLeft = charSQL.levelOneLeft;
+        this.levelTwo = charSQL.levelTwo.split('_');
+        this.levelTwoSlots = 0;
+        this.levelTwoLeft = charSQL.levelTwoLeft;
+        this.levelThree = charSQL.levelThree.split('_');
+        this.levelThreeSlots = 0;
+        this.levelThreeLeft = charSQL.levelThreeLeft;
+        this.levelFour = charSQL.levelFour.split('_');
+        this.levelFourSlots = 0;
+        this.levelFourLeft = charSQL.levelFourLeft;
+        this.levelFive = charSQL.levelFive.split('_');
+        this.levelFiveSlots = 0;
+        this.levelFiveLeft = charSQL.levelFiveLeft;
+        this.levelSix = charSQL.levelSix.split('_');
+        this.levelSixSlots = 0;
+        this.levelSixLeft = charSQL.levelSixLeft;
+        this.levelSeven = charSQL.levelSeven.split('_');
+        this.levelSevenSlots = 0;
+        this.levelSevenLeft = charSQL.levelSevenLeft;
+        this.levelEight = charSQL.levelEight.split('_');
+        this.levelEightSlots = 0;
+        this.levelEightLeft = charSQL.levelEightLeft;
+        this.levelNine = charSQL.levelNine.split('_');
+        this.levelNineSlots = 0;
+        this.levelNineLeft = charSQL.levelNineLeft;
+
+        this.age = charSQL.age;
+        this.height = charSQL.height;
+        this.weight = charSQL.weight;
+        this.backstory = charSQL.backstory;
+        this.appearance = charSQL.appearance;
+        this.allies = charSQL.allies;
+
+    }
+
+
+
     /** Create a character from data, add to db, return just the ID if successful
      * Since the only thing changing is an ID being added, to save time the server
      * will only return the ID number on success instead of the whole data to be parsed
@@ -60,7 +166,7 @@ class Character {
      * Some data manipulation is done to convert from strings to lists
      * This does not make any external api calls
      */
-    static async getDetails(id){
+    static async get(id){
         const results = await db.query(`
             SELECT * FROM characters
             WHERE id=$1`,
@@ -68,7 +174,9 @@ class Character {
         if(!results.rows[0]){
             throw new NotFoundError(`No character id: ${id}`);
         }
-        let character = sqlToCharacter(results.rows[0]);
+        //Create a character object and return it
+        //Route will then do some manipulation to get all the other info
+        let character = new Character(results.rows[0]);
         return character;
     }
 
