@@ -4,14 +4,15 @@
 const db = require('../db');
 const dndApi = require('../dndApi');
 const {BadRequestError, NotFoundError, ExpressError } = require('../expressError');
-const {characterToSQL, sqlToCharacter, sqlForUpdate} = require('../helpers');
+const {characterToSQL, sqlToCharacter} = require('../helpers/characters');
+const {sqlForUpdate} = require('../helpers/sql')
 
 class Character {
 
     constructor(charSQL){
         this.id = charSQL.id;
         this.creatorID = charSQL.creatorID;
-        this.name = charSQL.name;
+        this.charName = charSQL.charName;
         this.race = charSQL.race;
         this.subrace =charSQL.subrace;
         this.className = charSQL.className;
@@ -140,7 +141,7 @@ class Character {
      */
     static async getAll(){
         const results = await db.query(`
-        SELECT id, name, class, level, race
+        SELECT id, creatorID, charName, race, className, level, race
         FROM characters`);
         return results.rows;
     }

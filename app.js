@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan')
 
-const {NotFoundError} = require('./expressError')
+const {NotFoundError} = require('./expressError');
 
 const {authJWT} = require('./middleware/auth');
 

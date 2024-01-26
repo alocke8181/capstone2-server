@@ -1,12 +1,26 @@
 const express = require('express');
 
-const {BadRequestError, NotFoundError, ExpressError } = require('../expressError');
+const {BadRequestError, NotFoundError, ExpressError } = require('../expressError')
 const dndApi = require('../dndApi');
 const Character = require('../models/Character');
 
 const router = new express.Router();
 
-/**GET / =>
+/**
+ * GET / => {characters : [{id, creatorID, charName, race, className, level}, ...]}
+ * 
+ * Will require admin later
+ */
+router.get('/', async (req,res,next)=>{
+    try{
+        let characters = await Character.getAll();
+        return res.json({characters});
+    }catch(e){
+        return next(e);
+    }
+})
+
+/**GET /[id] => {character}
  * 
  * Get based on an ID
  * return the whole character object after converting from SQL
@@ -108,3 +122,5 @@ async function convertFeatures(features){
     });
     return output;
 }
+
+module.exports = router;

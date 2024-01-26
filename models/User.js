@@ -1,23 +1,55 @@
 const db = require('../db');
 
-const {NotFoundError} = require('../expressError');
-const {sqlForUpdate} = require('../helpers');
+const {NotFoundError, UnauthorizedError, BadRequestError} = require('../expressError');
+const {sqlForUpdate} = require('../helpers/sql');
+const bcrypt = require('bcrypt');
+const {BCRYPT_WORK_FACTOR} = require('../config');
 
 class User{
+
+    /**
+     * Authenticate a user with username and password
+     */
+
+    static async authenticate(username, password){
+        const result = await db.query(
+            `SELECT * from users
+            WHERE username = $1`,
+            [username]);
+        const user = result.rows[0];
+        if(user){
+            const valid = await bcrypt.compare(password, user.password);
+            if(valid){
+                delete user.password;
+                return user;
+            };
+        };
+        throw new UnauthorizedError('Invalid username/password');
+    };
 
     /**
      * Make a new user
      * Returns full user object
      */
-    static async post(newUser){
-        const [sqlNames, sqlNumbers, dataToAdd] = userToSQL(newUser)
-        const results = await db.query(`
+    static async post({username, password, email, isAdmin}){
+        const dupeCheck = await db.query(`
+            SELECT username FROM users WHERE username = $1`,
+            [username]);
+        if(dupeCheck.rows[0]){
+            throw new BadRequestError(`Duplicate user: ${username}`);
+        }
+
+        const hashPwd = await bcrypt.hash(password, BCRYPT_WORK_FACTOR);
+
+        const result = await db.query(`
             INSERT INTO users
-            ${sqlNames}
-            VALUES ${sqlNumbers}
-            RETURNING *`,
-            dataToAdd);
-        return results.rows[0]
+            (username, password, email, isAdmin)
+            VALUES ($1, $2, $3, $4)
+            RETURNING username, email, isAdmin`,
+            [username, password, email, isAdmin]);
+
+        const user = result.rows[0];
+        return user;
     };
 
     /**

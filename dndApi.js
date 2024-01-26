@@ -1,6 +1,6 @@
 const axios = require('axios');
 const BASE_URL = 'https://www.dnd5eapi.co/api';
-const {BadRequestError, NotFoundError, ExpressError } = require('expressError');
+const {BadRequestError, NotFoundError, ExpressError } = require('./expressError');
 
 class dndApi{
 

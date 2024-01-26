@@ -1,11 +1,11 @@
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
     username VARCHAR(30) UNIQUE NOT NULL,
-    pwd TEXT NOT NULL,
+    password TEXT NOT NULL,
     email TEXT NOT NULL
         CHECK (position('@' IN email) > 1),
     isAdmin BOOLEAN NOT NULL DEFAULT FALSE
-)
+);
 
 CREATE TABLE characters(
     id SERIAL PRIMARY KEY,
@@ -15,8 +15,9 @@ CREATE TABLE characters(
     race TEXT,
     subrace TEXT,
     className TEXT,
+    background TEXT,
     alignment TEXT,
-    lvl INTEGER,
+    level INTEGER,
     exp INTEGER CHECK (exp >= 0),
 
     strength INTEGER CHECK (strength >= 0),
@@ -49,6 +50,7 @@ CREATE TABLE characters(
     equipProfs TEXT,
 
     equipment TEXT,
+    altResources TEXT,
     copper INTEGER CHECK (copper >= 0),
     silver INTEGER CHECK (silver >= 0),
     gold INTEGER CHECK (gold >= 0),
@@ -80,20 +82,20 @@ CREATE TABLE characters(
     levelNineLeft INTEGER,
 
     age INTEGER,
-    height VARCHAR(10),
+    height VARCHAR(20),
     weight VARCHAR(10),
-    backstory VARCHAR(1000),
-    appearance VARCHAR(1000),
-    allies VARCHAR(300)
-)
+    backstory TEXT,
+    appearance TEXT,
+    allies TEXT
+);
 
 CREATE TABLE users_chars (
     user_id INTEGER
         REFERENCES users ON DELETE CASCADE,
     char_id INTEGER
-        REFERENCES characters ON DELETE CASCADE
+        REFERENCES characters ON DELETE CASCADE,
     PRIMARY KEY (user_id, char_id)
-)
+);
 
 CREATE TABLE custom_traits(
     id SERIAL PRIMARY KEY,
@@ -101,16 +103,16 @@ CREATE TABLE custom_traits(
         REFERENCES characters ON DELETE CASCADE,
     name TEXT,
     source TEXT,
-    description TEXT,
-)
+    description TEXT
+);
 
 CREATE TABLE chars_custom_traits(
     char_id INTEGER
         REFERENCES characters ON DELETE CASCADE,
     trait_id INTEGER
         REFERENCES custom_traits ON DELETE CASCADE,
-    PRIMARY KEY (user_id, char_id)
-)
+    PRIMARY KEY (char_id, trait_id)
+);
 
 CREATE TABLE custom_attacks(
     id SERIAL PRIMARY KEY,
@@ -132,14 +134,13 @@ CREATE TABLE custom_attacks(
     altDmgType TEXT,
     description TEXT,
     savingSkill TEXT,
-    savingEffect TEXT,
-
-)
+    savingEffect TEXT
+);
 
 CREATE TABLE chars_custom_attacks(
     char_id INTEGER
         REFERENCES characters ON DELETE CASCADE,
     attack_id INTEGER
         REFERENCES custom_attacks ON DELETE CASCADE,
-    PRIMARY KEY (user_id, char_id)
-)
+    PRIMARY KEY (char_id, attack_id)
+);
