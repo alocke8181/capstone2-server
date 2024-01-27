@@ -1,12 +1,12 @@
 //Export to helpers
 function sqlForUpdate(data){
-    const keys = Object.keys(data);
-    if (keys.length === 0) throw new BadRequestError("No data");
-  
-    // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
-    const cols = keys.map((colName, idx) =>
-        `"${colName}"=$${idx + 1}`,
-    );
+    const keys = Object.keys(dataToUpdate);
+  if (keys.length === 0) throw new BadRequestError("No data");
+
+  // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
+  const cols = keys.map((colName, idx) =>
+      `"${jsToSql[colName] || colName}"=$${idx + 1}`,
+  );
       
     return {
         setCols: cols.join(", "),

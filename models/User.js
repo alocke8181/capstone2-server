@@ -45,7 +45,7 @@ class User{
             INSERT INTO users
             (username, password, email, isAdmin)
             VALUES ($1, $2, $3, $4)
-            RETURNING username, email, isAdmin`,
+            RETURNING id, username, email, isAdmin`,
             [username, password, email, isAdmin]);
 
         const user = result.rows[0];
@@ -78,13 +78,14 @@ class User{
     };
 
     static async patch(id, data){
-        const {setCols, values, lastIdx} = sqlForUpdate(data);
+        const password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
+        const email = data.email;
         const results = await db.query(`
             UPDATE users
-            SET ${setCols}
-            WHERE id = ${lastIdx}
-            RETURNING *`,
-            [...values, id]);
+            SET password = $1, email = $2
+            WHERE id = $3
+            RETURNING id, username, email, isAdmin`,
+            [password, email, id]);
         if(!results.rows[0]){
             throw new NotFoundError(`Could not update no id: ${id}`);
         }
