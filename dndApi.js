@@ -29,6 +29,16 @@ class dndApi{
         return resp;
     }
 
+    static async getSpell(cantrip){
+        const resp = await axios.get(`${BASE_URL}/spells/${cantrip}`);
+        return resp;
+    }
+
+    static async getAttack(weapon){
+        const resp = await axios.get(`${BASE_URL}/equipment/${weapon}`);
+        return resp;
+    }
+
 }
 
 module.exports = dndApi;

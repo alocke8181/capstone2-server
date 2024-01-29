@@ -34,47 +34,47 @@ class Character {
         this.cha = charSQL.charisma;
         this.chaMod = Math.floor((this.cha -10)/2);
 
-        this.profBonus = 0; //To be calc'd later from class progression
+        this.profBonus = 0; //Calc'd from class level data
         this.savingProfs = charSQL.savingProfs.split('_');
         this.skillProfs = charSQL.skillProfs.split('_');
-        this.jackOfAllTrades = false; //To be calc'd based on skills
+        this.jackOfAllTrades = false; //Calc'd from skills
         this.passPerc = this.wisMod + 10;
 
-        this.speed = (this.dexMod * 5); //basespeed from race + (dexmod * 5)
+        this.speed = (this.dexMod * 5); //Calc'd from race data
         this.initiative = this.dexMod
-        this.armorClass = charSQL.armorClass; //Calculate this later
+        this.armorClass = charSQL.armorClass; 
         this.hpMax = charSQL.hpMax;
         this.hpCurr = charSQL.hpCurr;
         this.hpTemp = charSQL.hpTemp;
-        this.hitDice = 0; //come from class
+        this.hitDice = 0; //Calc'd from class data
         this.hitDiceMax = this.level;
         this.hitDiceCurr = charSQL.hitDiceCurr;
         this.deathSaveSuccess = charSQL.deathSaveSuccess;
         this.deathSaveFail = charSQL.deathSaveFail;
-        this.altResources = charSQL.altResources.split('_'); //Convert from string to list of objects
+        this.altResources = charSQL.altResources.split('_'); //Converted to objects
 
         this.personality = charSQL.personality;
         this.ideals = charSQL.ideals;
         this.bonds = charSQL.bonds;
         this.flaws = charSQL.flaws;
 
-        this.traits = charSQL.traits.split('_'); //redo later to turn each into a trait object
-        this.features = charSQL.features.split('_'); //redo later to turn each into a trait object
+        this.traits = charSQL.traits.split('_'); //Converted to objects and custom traits
+        this.features = charSQL.features.split('_'); //Converted to objects
         this.languages = charSQL.languages.split('_');
         this.equipProfs = charSQL.equipProfs.split('_');
 
-        this.equipment = charSQL.equipment.split('_'); //Redo to convert into equipment objects with name and number
+        this.equipment = charSQL.equipment.split('_'); //Converted to objects
         this.copper = charSQL.copper;
         this.silver = charSQL.silver;
         this.gold = charSQL.gold;
 
-        this.attacks = charSQL.attacks.split('_') //Redo to convert into atk objects, pull from db and spell list
+        this.attacks = charSQL.attacks.split('_') //Redo to convert into atk objects, spells NOT included
         this.spellAbility = charSQL.spellAbility;
         this.spellSaveDC = charSQL.spellSaveDC;
         this.spellAtkBonus = charSQL.spellAtkBonus;
 
         this.cantripsKnown = 0;
-        this.cantrips = charSQL.cantrips.split('_'); //All lists of spells should be converted to objects
+        this.cantrips = charSQL.cantrips.split('_'); //All lists of spells are converted to objects
         this.levelOne = charSQL.levelOne.split('_');
         this.levelOneSlots = 0;
         this.levelOneLeft = charSQL.levelOneLeft;
