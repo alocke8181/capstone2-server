@@ -175,10 +175,11 @@ async function convertSpells(spells){
                     damage : result.value.data.damage || null,
                     healLevels : result.value.data.heal_at_slot_level || null,
                     dc : result.value.data.dc || null
-                })
+                });
             }
-        })
-    })
+        });
+    });
+    return output;
 }
 
 /**
@@ -206,30 +207,44 @@ async function convertAttacks(attacks){
         };
     });
 
-    //Get normal
-    extAtks.forEach((attack)=>{
-        extPromises.push(dndApi.getAttack(attack));
-    });
-    Promise.allSettled(extPromises).then((results)=>{
-        results.forEach((result)=>{
-            output.push({
-                index : result.data.index,
-                name : result.data.name,
-                damage : result.data.damage,
-                range : result.data.range,
-                props : result.data.properties,
-                twoHandDmg : result.data.two_handed_damage || null
-            });
-        });
-    });
-
     //Get custom
     customAtks.forEach((attack)=>{
         dbPromises.push(Attack.get(attack));
     });
-    Promise.allSettled(dbPromises).then((results)=>{
+    await Promise.allSettled(dbPromises).then((results)=>{
         results.forEach((result)=>{
-            output.push(result);
+            if(result.status === 'rejected'){
+                output.push({
+                    name : 'Custom Attack Not Found',
+                    description : String(result.reason).slice(0,33)
+                });
+            }else{
+                output.push(result.value);
+            }
+        });
+    });
+
+    //Get normal
+    extAtks.forEach((attack)=>{
+        extPromises.push(dndApi.getAttack(attack));
+    });
+    await Promise.allSettled(extPromises).then((results)=>{
+        results.forEach((result)=>{
+            if(result.status === 'rejected'){
+                output.push({
+                    name : 'Attack Not Found',
+                    description : `No Path ${result.reason.request.path}`
+                });
+            }else{
+                output.push({
+                    index : result.value.data.index,
+                    name : result.value.data.name,
+                    damage : result.value.data.damage,
+                    range : result.value.data.range,
+                    props : result.value.data.properties,
+                    twoHandDmg : result.value.data.two_handed_damage || null
+                });
+            }
         });
     });
 

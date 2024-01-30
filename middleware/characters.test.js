@@ -152,5 +152,79 @@ describe('convertEquipment tests',()=>{
         const equip2 = out[1];
         expect(equip2.name).toEqual('feet of rope');
         expect(equip2.amount).toEqual(50);
+    });
+});
+
+describe('convertSpells tests', ()=>{
+    test('Returns null on empty list',async ()=>{
+        const out = await convertSpells([]);
+        expect(out).toEqual(null);
+    });
+    test('Works with one spell', async ()=>{
+        const out = await convertSpells(['fire-bolt']);
+        expect(out.length).toEqual(1);
+        const spell = out[0];
+        expect(spell.index).toEqual('fire-bolt');
+        expect(spell.name).toEqual('Fire Bolt');
+        expect(spell.description).toContain("This spell's damage increases by 1d10 when you reach 5th level");
+    });
+    test('Works with multiple spells', async()=>{
+        const out = await convertSpells(['fire-bolt','fireball']);
+        expect(out.length).toEqual(2);
+        const spell1 = out[0];
+        expect(spell1.index).toEqual('fire-bolt');
+        expect(spell1.name).toEqual('Fire Bolt');
+        expect(spell1.description).toContain("This spell's damage increases by 1d10 when you reach 5th level");
+        const spell2 = out[1];
+        expect(spell2.index).toEqual('fireball');
+        expect(spell2.name).toEqual('Fireball');
+        expect(spell2.description).toContain("The fire spreads around corners.");
+    });
+});
+
+describe('convertAttacks tests', ()=>{
+    test('Returns null on empty list', async ()=>{
+        const out = await convertAttacks([]);
+        expect(out).toEqual(null);
+    });
+    test('Works for custom attack', async ()=>{
+        const out = await convertAttacks(['custom-1']);
+        expect(out.length).toEqual(1);
+        const atk = out[0];
+        expect(atk.name).toEqual('Atk 1');
+        expect(atk.isProf).toEqual(true);
+        expect(atk.description).toEqual('Custom attack 1 for Gale');
+    });
+    test('Works on standard attack',async ()=>{
+        const out = await convertAttacks(['longsword']);
+        expect(out.length).toEqual(1);
+        const atk = out[0];
+        expect(atk.index).toEqual('longsword');
+        expect(atk.two_handed_damage).not.toBeNull();
+    });
+    test('Works with custom + standard attacks', async ()=>{
+        const out = await convertAttacks(['longsword','custom-1']);
+        expect(out.length).toEqual(2);
+        const atk1 = out[1];
+        expect(atk1.index).toEqual('longsword');
+        expect(atk1.two_handed_damage).not.toBeNull();
+        const atk2 = out[0];
+        expect(atk2.name).toEqual('Atk 1');
+        expect(atk2.isProf).toEqual(true);
+        expect(atk2.description).toEqual('Custom attack 1 for Gale');
+    });
+    test('Fails correctly with custom attacks', async ()=>{
+        const out = await convertAttacks(['custom-404']);
+        expect(out.length).toEqual(1);
+        const atk = out[0]
+        expect(atk.name).toEqual('Custom Attack Not Found');
+        expect(atk.description).toEqual('Error: No attack id: 404');
+    })
+    test('Fails correctly with standard attacks', async ()=>{
+        const out = await convertAttacks(['asdf']);
+        expect(out.length).toEqual(1);
+        const atk = out[0]
+        expect(atk.name).toEqual('Attack Not Found');
+        expect(atk.description).toEqual('No Path /api/equipment/asdf');
     })
 })
