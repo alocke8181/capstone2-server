@@ -11,11 +11,11 @@ class Character {
 
     constructor(charSQL){
         this.id = charSQL.id;
-        this.creatorID = charSQL.creatorID;
-        this.charName = charSQL.charName;
+        this.creatorID = charSQL.creatorid;
+        this.charName = charSQL.charname;
         this.race = charSQL.race;
         this.subrace =charSQL.subrace;
-        this.className = charSQL.className;
+        this.className = charSQL.classname;
         this.background = charSQL.background;
         this.alignment = charSQL.alignment;
         this.level = charSQL.level;
@@ -35,23 +35,23 @@ class Character {
         this.chaMod = Math.floor((this.cha -10)/2);
 
         this.profBonus = 0; //Calc'd from class level data
-        this.savingProfs = charSQL.savingProfs.split('_');
-        this.skillProfs = charSQL.skillProfs.split('_');
+        this.savingProfs = charSQL.savingprofs.split('_');
+        this.skillProfs = charSQL.skillprofs.split('_');
         this.jackOfAllTrades = false; //Calc'd from skills
-        this.passPerc = this.wisMod + 10;
+        this.passPerc = this.wismMod + 10;
 
         this.speed = (this.dexMod * 5); //Calc'd from race data
         this.initiative = this.dexMod
-        this.armorClass = charSQL.armorClass; 
-        this.hpMax = charSQL.hpMax;
-        this.hpCurr = charSQL.hpCurr;
-        this.hpTemp = charSQL.hpTemp;
+        this.armorClass = charSQL.armorclass; 
+        this.hpMax = charSQL.hpmax;
+        this.hpCurr = charSQL.hpcurr;
+        this.hpTemp = charSQL.hptemp;
         this.hitDice = 0; //Calc'd from class data
         this.hitDiceMax = this.level;
-        this.hitDiceCurr = charSQL.hitDiceCurr;
-        this.deathSaveSuccess = charSQL.deathSaveSuccess;
-        this.deathSaveFail = charSQL.deathSaveFail;
-        this.altResources = charSQL.altResources.split('_'); //Converted to objects
+        this.hitDiceCurr = charSQL.hitdicecurr;
+        this.deathSaveSuccess = charSQL.deathsavesuccess;
+        this.deathSaveFail = charSQL.deathsavefail;
+        this.altResources = charSQL.altresources.split('_'); //Converted to objects
 
         this.personality = charSQL.personality;
         this.ideals = charSQL.ideals;
@@ -61,7 +61,7 @@ class Character {
         this.traits = charSQL.traits.split('_'); //Converted to objects and custom traits
         this.features = charSQL.features.split('_'); //Converted to objects
         this.languages = charSQL.languages.split('_');
-        this.equipProfs = charSQL.equipProfs.split('_');
+        this.equipProfs = charSQL.equipprofs.split('_');
 
         this.equipment = charSQL.equipment.split('_'); //Converted to objects
         this.copper = charSQL.copper;
@@ -69,39 +69,39 @@ class Character {
         this.gold = charSQL.gold;
 
         this.attacks = charSQL.attacks.split('_') //Redo to convert into atk objects, spells NOT included
-        this.spellAbility = charSQL.spellAbility;
-        this.spellSaveDC = charSQL.spellSaveDC;
-        this.spellAtkBonus = charSQL.spellAtkBonus;
+        this.spellAbility = charSQL.spellability;
+        this.spellSaveDC = charSQL.spellsavedc;
+        this.spellAtkBonus = charSQL.spellatkbonus;
 
         this.cantripsKnown = 0;
         this.cantrips = charSQL.cantrips.split('_'); //All lists of spells are converted to objects
-        this.levelOne = charSQL.levelOne.split('_');
+        this.levelOne = charSQL.levelone.split('_');
         this.levelOneSlots = 0;
-        this.levelOneLeft = charSQL.levelOneLeft;
-        this.levelTwo = charSQL.levelTwo.split('_');
+        this.levelOneLeft = charSQL.leveloneleft;
+        this.levelTwo = charSQL.leveltwo.split('_');
         this.levelTwoSlots = 0;
-        this.levelTwoLeft = charSQL.levelTwoLeft;
-        this.levelThree = charSQL.levelThree.split('_');
+        this.levelTwoLeft = charSQL.leveltwoleft;
+        this.levelThree = charSQL.levelthree.split('_');
         this.levelThreeSlots = 0;
-        this.levelThreeLeft = charSQL.levelThreeLeft;
+        this.levelThreeLeft = charSQL.levelthreeleft;
         this.levelFour = charSQL.levelFour.split('_');
         this.levelFourSlots = 0;
-        this.levelFourLeft = charSQL.levelFourLeft;
-        this.levelFive = charSQL.levelFive.split('_');
+        this.levelFourLeft = charSQL.levelfourleft;
+        this.levelFive = charSQL.levelfive.split('_');
         this.levelFiveSlots = 0;
-        this.levelFiveLeft = charSQL.levelFiveLeft;
-        this.levelSix = charSQL.levelSix.split('_');
+        this.levelFiveLeft = charSQL.levelfiveleft;
+        this.levelSix = charSQL.levelsix.split('_');
         this.levelSixSlots = 0;
-        this.levelSixLeft = charSQL.levelSixLeft;
-        this.levelSeven = charSQL.levelSeven.split('_');
+        this.levelSixLeft = charSQL.levelsixleft;
+        this.levelSeven = charSQL.levelseven.split('_');
         this.levelSevenSlots = 0;
-        this.levelSevenLeft = charSQL.levelSevenLeft;
-        this.levelEight = charSQL.levelEight.split('_');
+        this.levelSevenLeft = charSQL.levelsevenleft;
+        this.levelEight = charSQL.leveleight.split('_');
         this.levelEightSlots = 0;
-        this.levelEightLeft = charSQL.levelEightLeft;
-        this.levelNine = charSQL.levelNine.split('_');
+        this.levelEightLeft = charSQL.leveleightleft;
+        this.levelNine = charSQL.levelnine.split('_');
         this.levelNineSlots = 0;
-        this.levelNineLeft = charSQL.levelNineLeft;
+        this.levelNineLeft = charSQL.levelnineleft;
 
         this.age = charSQL.age;
         this.height = charSQL.height;
@@ -141,7 +141,7 @@ class Character {
      */
     static async getAll(){
         const results = await db.query(`
-        SELECT id, creatorID, charName, race, className, level, race
+        SELECT id, creatorid, charname, race, classname, level, race
         FROM characters`);
         return results.rows;
     }
@@ -153,7 +153,7 @@ class Character {
      */
     static async getList(userID){
         const results = await db.query(`
-        SELECT id, name, class, level, race
+        SELECT id, charname, race, classname, level
         FROM characters
         WHERE creator_ID = $1`,
         [userID]);

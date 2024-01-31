@@ -3,6 +3,57 @@ const Attack = require('../models/Attack');
 const dndApi = require('../dndApi');
 
 /**
+ * Massive converter function
+ * Converts a character from SQL data to a javascript object
+ * Sets lots of attributes based on external API calls
+ * Converts arrays of strings to arrays of objects 
+ */
+async function completeCharacterData(character){
+    const raceData = await dndApi.getRaceInfo(character.race);
+    const classData = await dndApi.getClassInfo(character.className)
+    const classLevelData = await dndApi.getClassLevelInfo(character.className, character.level)
+    character.profBonus = classLevelData.prof_bonus;
+    if(character.traits.includes('jack-of-all-trades')){
+        character.jackOfAllTrades = true;
+    }
+    character.speed = character.speed + raceData.speed;
+    character.hitDice = classData.hit_die;
+
+    const spellData = classLevelData.spellcasting;
+    character.cantripsKnown = spellData.cantrips_known;
+    character.levelOneSlots = spellData.spell_slots_level_1;
+    character.levelTwoSlots = spellData.spell_slots_level_2;
+    character.levelThreeSlots = spellData.spell_slots_level_3;
+    character.levelFourSlots = spellData.spell_slots_level_4;
+    character.levelFiveSlots = spellData.spell_slots_level_5;
+    character.levelSixSlots = spellData.spell_slots_level_6;
+    character.levelSevenSlots = spellData.spell_slots_level_7;
+    character.levelEightSlots = spellData.spell_slots_level_8;
+    character.levelNineSlots = spellData.spell_slots_level_9;
+
+    character.altResources = convertAltResourcesOut(character.altResources);
+    character.traits = await convertTraitsOut(character.traits);
+    character.features = await convertFeaturesOut(character.features);
+
+    character.equipment = convertEquipmentOut(character.equipment);
+    
+    character.cantrips = await convertSpellsOut(character.cantrips);
+    character.levelOne = await convertSpellsOut(character.levelOne);
+    character.levelTwo = await convertSpellsOut(character.levelTwo);
+    character.levelThree = await convertSpellsOut(character.levelThree);
+    character.levelFour = await convertSpellsOut(character.levelFour);
+    character.levelFive = await convertSpellsOut(character.levelFive);
+    character.levelSix = await convertSpellsOut(character.levelSix);
+    character.levelSeven = await convertSpellsOut(character.levelSeven);
+    character.levelEight = await convertSpellsOut(character.levelEight);
+    character.levelNine = await convertSpellsOut(character.levelNine);
+
+    character.attacks = await convertAttacksOut(character.attacks);
+}
+
+
+
+/**
  * Convert each string in the alt resources into an object
  * 1*1*bardic-inspiration => {max : 1, curr : 1, name : bardic inspiration}
  * 
@@ -349,6 +400,7 @@ function convertAttacksIn(attacks){
 }
 
 module.exports = {
+    completeCharacterData,
     convertAltResourcesOut,
     convertTraitsOut,
     convertFeaturesOut,

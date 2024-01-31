@@ -1,5 +1,6 @@
 const db = require('../db');
 const {NotFoundError} = require('../expressError')
+const {sqlForUpdate, sqlForPost} = require('../helpers/sql');
 
 class Attack{
 
@@ -35,6 +36,48 @@ class Attack{
         };
         return new Attack(results.rows[0]);
     };
+
+    static async post(data){
+        const [keyString, indeces, values] = sqlForPost(data)
+        const results = await db.query(`
+            INSERT INTO custom_attacks
+            ${keyString}
+            VALUES ${indeces}
+            RETURNING *`,
+            [...values]);
+        return new Attack(results.rows[0]);
+    };
+
+    static async patch(data){
+        const id = data.id;
+        delete data.id;
+        const {setCols, values} = sqlForUpdate(data);
+        const lastIdx = '$' + (values.length+1);
+        const results = await db.query(`
+            UPDATE custom_attacks
+            SET ${setCols}
+            WHERE id = ${lastIdx}
+            RETURNING *`,
+            [...values, id]);
+        if(!results.rows[0]){
+            throw new NotFoundError(`No attack id: ${id}`);
+        };
+        return new Attack(results.rows[0]);
+    };
+
+    static async delete(id){
+        const results = await db.query(`
+            DELETE FROM custom_attacks
+            WHERE id = $1
+            RETURNING id`,
+            [id]);
+        if(!results.rows[0]){
+            throw new NotFoundError(`No trait id: ${id}`);
+        };
+        return results.rows[0].id;
+    }
+
+    
 };
 
 module.exports = Attack;
