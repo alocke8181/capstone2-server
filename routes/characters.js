@@ -3,7 +3,7 @@ const router = new express.Router();
 
 const Character = require('../models/Character');
 
-const {completeCharacterData} = require('../middleware/characters');
+const {completeCharacterDataOut} = require('../middleware/characters');
 
 
 
@@ -33,7 +33,7 @@ router.get('/', async (req,res,next)=>{
 router.get('/:id', async (req,res,next)=>{
     try{
         let character = await Character.get(req.params.id);
-        character = await completeCharacterData(character); 
+        character = await completeCharacterDataOut(character); 
         return res.json({character})
     }catch(e){
         return next(e);

@@ -35,8 +35,8 @@ class Character {
         this.chaMod = Math.floor((this.cha -10)/2);
 
         this.profBonus = 0; //Calc'd from class level data
-        this.savingProfs = charSQL.savingprofs.split('_');
-        this.skillProfs = charSQL.skillprofs.split('_');
+        this.savingProfs = charSQL.savingprofs.split('_') || null;
+        this.skillProfs = charSQL.skillprofs.split('_') || null;
         this.jackOfAllTrades = false; //Calc'd from skills
         this.passPerc = this.wismMod + 10;
 
@@ -51,55 +51,55 @@ class Character {
         this.hitDiceCurr = charSQL.hitdicecurr;
         this.deathSaveSuccess = charSQL.deathsavesuccess;
         this.deathSaveFail = charSQL.deathsavefail;
-        this.altResources = charSQL.altresources.split('_'); //Converted to objects
+        this.altResources = charSQL.altresources; //Converted to objects
 
         this.personality = charSQL.personality;
         this.ideals = charSQL.ideals;
         this.bonds = charSQL.bonds;
         this.flaws = charSQL.flaws;
 
-        this.traits = charSQL.traits.split('_'); //Converted to objects and custom traits
-        this.features = charSQL.features.split('_'); //Converted to objects
-        this.languages = charSQL.languages.split('_');
-        this.equipProfs = charSQL.equipprofs.split('_');
+        this.traits = charSQL.traits; //Converted to objects and custom traits
+        this.features = charSQL.features; //Converted to objects
+        this.languages = charSQL.languages.split('_') || null;
+        this.equipProfs = charSQL.equipprofs.split('_') || null;
 
-        this.equipment = charSQL.equipment.split('_'); //Converted to objects
+        this.equipment = charSQL.equipment; //Converted to objects
         this.copper = charSQL.copper;
         this.silver = charSQL.silver;
         this.gold = charSQL.gold;
 
-        this.attacks = charSQL.attacks.split('_') //Redo to convert into atk objects, spells NOT included
+        this.attacks = charSQL.attacks; //Converted into atk objects, spells NOT included
         this.spellAbility = charSQL.spellability;
         this.spellSaveDC = charSQL.spellsavedc;
         this.spellAtkBonus = charSQL.spellatkbonus;
 
         this.cantripsKnown = 0;
-        this.cantrips = charSQL.cantrips.split('_'); //All lists of spells are converted to objects
-        this.levelOne = charSQL.levelone.split('_');
+        this.cantrips = charSQL.cantrips; //All lists of spells are converted to objects
+        this.levelOne = charSQL.levelone;
         this.levelOneSlots = 0;
         this.levelOneLeft = charSQL.leveloneleft;
-        this.levelTwo = charSQL.leveltwo.split('_');
+        this.levelTwo = charSQL.leveltwo;
         this.levelTwoSlots = 0;
         this.levelTwoLeft = charSQL.leveltwoleft;
-        this.levelThree = charSQL.levelthree.split('_');
+        this.levelThree = charSQL.levelthree;
         this.levelThreeSlots = 0;
         this.levelThreeLeft = charSQL.levelthreeleft;
-        this.levelFour = charSQL.levelFour.split('_');
+        this.levelFour = charSQL.levelFour;
         this.levelFourSlots = 0;
         this.levelFourLeft = charSQL.levelfourleft;
-        this.levelFive = charSQL.levelfive.split('_');
+        this.levelFive = charSQL.levelfive;
         this.levelFiveSlots = 0;
         this.levelFiveLeft = charSQL.levelfiveleft;
-        this.levelSix = charSQL.levelsix.split('_');
+        this.levelSix = charSQL.levelsix;
         this.levelSixSlots = 0;
         this.levelSixLeft = charSQL.levelsixleft;
-        this.levelSeven = charSQL.levelseven.split('_');
+        this.levelSeven = charSQL.levelseven;
         this.levelSevenSlots = 0;
         this.levelSevenLeft = charSQL.levelsevenleft;
-        this.levelEight = charSQL.leveleight.split('_');
+        this.levelEight = charSQL.leveleight;
         this.levelEightSlots = 0;
         this.levelEightLeft = charSQL.leveleightleft;
-        this.levelNine = charSQL.levelnine.split('_');
+        this.levelNine = charSQL.levelnine;
         this.levelNineSlots = 0;
         this.levelNineLeft = charSQL.levelnineleft;
 

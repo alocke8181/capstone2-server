@@ -12,7 +12,7 @@ describe('convertAltResources tests',()=>{
         expect(input).toBeNull();
     });
     test('Works on singular input', ()=>{
-        const output = convertAltResourcesOut(['1*1*bardic-inspiration']);
+        const output = convertAltResourcesOut('1*1*bardic-inspiration');
         expect(output.length).toEqual(1);
         const resource = output[0];
         expect(resource.max).toEqual(1);
@@ -23,7 +23,7 @@ describe('convertAltResources tests',()=>{
         expect(input).toEqual('1*1*bardic-inspiration')
     })
     test('Works on multiple inputs',()=>{
-        const output = convertAltResourcesOut(['1*1*test-one','2*1*test-two']);
+        const output = convertAltResourcesOut('1*1*test-one_2*1*test-two');
         expect(output.length).toEqual(2);
         const res1 = output[0];
         const res2 = output[1];
@@ -40,7 +40,7 @@ describe('convertAltResources tests',()=>{
 });
 
 describe('convertTraits tests', ()=>{
-    test('Works on empty list', async ()=>{
+    test('Works on empty string', async ()=>{
         const output = await convertTraitsOut([]);
         expect(output).toEqual(null);
 
@@ -48,7 +48,7 @@ describe('convertTraits tests', ()=>{
         expect(input).toBeNull();
     });
     test('Works on custom trait', async ()=>{
-        const output = await convertTraitsOut(['custom-1']);
+        const output = await convertTraitsOut('custom-1');
         expect(output.length).toEqual(1);
         const trait = output[0];
         expect(trait.charID).toEqual(1);
@@ -60,7 +60,7 @@ describe('convertTraits tests', ()=>{
         expect(input).toEqual('custom-1');
     });
     test('Works on a pre-existing trait', async ()=>{
-        const output = await convertTraitsOut(['brave']);
+        const output = await convertTraitsOut('brave');
         expect(output.length).toEqual(1);
         const trait = output[0];
         expect(trait.index).toEqual('brave');
@@ -71,7 +71,7 @@ describe('convertTraits tests', ()=>{
         expect(input).toEqual('brave');
     });
     test('Works on multiple custom traits', async ()=>{
-        const output = await convertTraitsOut(['custom-1','custom-2']);
+        const output = await convertTraitsOut('custom-1_custom-2');
         expect(output.length).toEqual(2);
         const trait1 = output[0];
         expect(trait1.charID).toEqual(1);
@@ -88,7 +88,7 @@ describe('convertTraits tests', ()=>{
         expect(input).toEqual('custom-1_custom-2');
     });
     test('Works on multiple pre-existing traits', async ()=>{
-        const output = await convertTraitsOut(['brave','darkvision']);
+        const output = await convertTraitsOut('brave_darkvision');
         expect(output.length).toEqual(2);
         const trait1 = output[0];
         expect(trait1.index).toEqual('brave');
@@ -103,7 +103,7 @@ describe('convertTraits tests', ()=>{
         expect(input).toEqual('brave_darkvision');
     });
     test('works on custom and pre-existing traits', async ()=>{
-        const output = await convertTraitsOut(['custom-1','brave']);
+        const output = await convertTraitsOut('custom-1_brave');
         expect(output.length).toEqual(2);
         const trait1 = output[0];
         expect(trait1.charID).toEqual(1);
@@ -119,14 +119,14 @@ describe('convertTraits tests', ()=>{
         expect(input).toEqual('custom-1_brave');
     });
     test('Fails correctly on 404 custom', async ()=>{
-        const output = await convertTraitsOut(['custom-404']);
+        const output = await convertTraitsOut('custom-404');
         expect(output.length).toEqual(1);
         const trait = output[0];
         expect(trait.name).toEqual('Custom Trait Not Found');
         expect(trait.description).toEqual('Error: No trait id: 404');
     });
     test('Fails correctly on 404 not custom', async ()=>{
-        const output = await convertTraitsOut(['asdf']);
+        const output = await convertTraitsOut('asdf');
         expect(output.length).toEqual(1);
         const trait = output[0];
         expect(trait.name).toEqual('Trait Not Found');
@@ -135,7 +135,7 @@ describe('convertTraits tests', ()=>{
 });
 
 describe('convertFeatures tests',()=>{
-    test('Returns null on empty list',async ()=>{
+    test('Returns null on empty string',async ()=>{
         const out = await convertFeaturesOut([]);
         expect(out).toEqual(null);
 
@@ -143,7 +143,7 @@ describe('convertFeatures tests',()=>{
         expect(input).toBeNull();
     });
     test('Works on one feature', async ()=>{
-        const out = await convertFeaturesOut(['archdruid']);
+        const out = await convertFeaturesOut('archdruid');
         expect(out.length).toEqual(1);
         const feat = out[0];
         expect(feat.index).toEqual('archdruid');
@@ -154,7 +154,7 @@ describe('convertFeatures tests',()=>{
         expect(input).toEqual('archdruid');
     });
     test('works on multiple features', async ()=>{
-        const out = await convertFeaturesOut(['archdruid','danger-sense']);
+        const out = await convertFeaturesOut('archdruid_danger-sense');
         expect(out.length).toEqual(2);
         const feat1 = out[0];
         expect(feat1.index).toEqual('archdruid');
@@ -169,7 +169,7 @@ describe('convertFeatures tests',()=>{
         expect(input).toEqual('archdruid_danger-sense');
     });
     test('Fails correctly on 404', async ()=>{
-        const output = await convertFeaturesOut(['asdf']);
+        const output = await convertFeaturesOut('asdf');
         expect(output.length).toEqual(1);
         const feat = output[0];
         expect(feat.name).toEqual('Feature Not Found');
@@ -186,7 +186,7 @@ describe('convertEquipment tests',()=>{
         expect(input).toBeNull()
     });
     test('Works', ()=>{
-        const out = convertEquipmentOut(['1*bedroll','50*feet-of-rope']);
+        const out = convertEquipmentOut('1*bedroll_50*feet-of-rope');
         expect(out.length).toEqual(2);
         const equip1 = out[0];
         expect(equip1.name).toEqual('bedroll');
@@ -201,7 +201,7 @@ describe('convertEquipment tests',()=>{
 });
 
 describe('convertSpells tests', ()=>{
-    test('Returns null on empty list',async ()=>{
+    test('Returns null on empty string',async ()=>{
         const out = await convertSpellsOut([]);
         expect(out).toEqual(null);
 
@@ -209,7 +209,7 @@ describe('convertSpells tests', ()=>{
         expect(input).toBeNull();
     });
     test('Works with one spell', async ()=>{
-        const out = await convertSpellsOut(['fire-bolt']);
+        const out = await convertSpellsOut('fire-bolt');
         expect(out.length).toEqual(1);
         const spell = out[0];
         expect(spell.index).toEqual('fire-bolt');
@@ -220,7 +220,7 @@ describe('convertSpells tests', ()=>{
         expect(input).toEqual('fire-bolt');
     });
     test('Works with multiple spells', async()=>{
-        const out = await convertSpellsOut(['fire-bolt','fireball']);
+        const out = await convertSpellsOut('fire-bolt_fireball');
         expect(out.length).toEqual(2);
         const spell1 = out[0];
         expect(spell1.index).toEqual('fire-bolt');
@@ -237,7 +237,7 @@ describe('convertSpells tests', ()=>{
 });
 
 describe('convertAttacks tests', ()=>{
-    test('Returns null on empty list', async ()=>{
+    test('Returns null on empty string', async ()=>{
         const out = await convertAttacksOut([]);
         expect(out).toEqual(null);
 
@@ -245,7 +245,7 @@ describe('convertAttacks tests', ()=>{
         expect(input).toBeNull();
     });
     test('Works for custom attack', async ()=>{
-        const out = await convertAttacksOut(['custom-1']);
+        const out = await convertAttacksOut('custom-1');
         expect(out.length).toEqual(1);
         const atk = out[0];
         expect(atk.name).toEqual('Atk 1');
@@ -256,7 +256,7 @@ describe('convertAttacks tests', ()=>{
         expect(input).toEqual('custom-1');
     });
     test('Works on standard attack',async ()=>{
-        const out = await convertAttacksOut(['longsword']);
+        const out = await convertAttacksOut('longsword');
         expect(out.length).toEqual(1);
         const atk = out[0];
         expect(atk.index).toEqual('longsword');
@@ -266,7 +266,7 @@ describe('convertAttacks tests', ()=>{
         expect(input).toEqual('longsword');
     });
     test('Works with custom + standard attacks', async ()=>{
-        const out = await convertAttacksOut(['longsword','custom-1']);
+        const out = await convertAttacksOut('longsword_custom-1');
         expect(out.length).toEqual(2);
         const atk1 = out[1];
         expect(atk1.index).toEqual('longsword');
@@ -280,14 +280,14 @@ describe('convertAttacks tests', ()=>{
         expect(input).toEqual('custom-1_longsword');
     });
     test('Fails correctly with custom attacks', async ()=>{
-        const out = await convertAttacksOut(['custom-404']);
+        const out = await convertAttacksOut('custom-404');
         expect(out.length).toEqual(1);
         const atk = out[0]
         expect(atk.name).toEqual('Custom Attack Not Found');
         expect(atk.description).toEqual('Error: No attack id: 404');
     })
     test('Fails correctly with standard attacks', async ()=>{
-        const out = await convertAttacksOut(['asdf']);
+        const out = await convertAttacksOut('asdf');
         expect(out.length).toEqual(1);
         const atk = out[0]
         expect(atk.name).toEqual('Attack Not Found');

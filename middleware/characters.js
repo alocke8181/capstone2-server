@@ -8,7 +8,7 @@ const dndApi = require('../dndApi');
  * Sets lots of attributes based on external API calls
  * Converts arrays of strings to arrays of objects 
  */
-async function completeCharacterData(character){
+async function completeCharacterDataOut(character){
     const raceData = await dndApi.getRaceInfo(character.race);
     const classData = await dndApi.getClassInfo(character.className)
     const classLevelData = await dndApi.getClassLevelInfo(character.className, character.level)
@@ -58,12 +58,13 @@ async function completeCharacterData(character){
  * 1*1*bardic-inspiration => {max : 1, curr : 1, name : bardic inspiration}
  * 
  */
-function convertAltResourcesOut(input){
-    if(input.length==0 || input[0] === ''){
+function convertAltResourcesOut(resources){
+    if(!resources || resources == ''){
         return null;
     }
+    const resourceList = resources.split('_');
     let output = [];
-    input.forEach((input)=>{
+    resourceList.forEach((input)=>{
         let data = input.split('*');
         let name = data[2].replaceAll('-',' ');
         output.push({
@@ -79,12 +80,12 @@ function convertAltResourcesOut(input){
  * Convert each object into a string and then combine them
  * [{max : 1, curr : 1, name : bardic inspiration},...] => '1*1*bardic-inspiration_...
  */
-function convertAltResourcesIn(input){
-    if(!input || input.length ==0){
+function convertAltResourcesIn(resources){
+    if(!resources || resources.length ==0){
         return null;
     }
     const output = [];
-    input.forEach((input)=>{
+    resources.forEach((input)=>{
         let text = input.max.toString() + '*' + input.curr.toString() + '*' + input.name.replaceAll(' ','-');
         output.push(text);
     });
@@ -97,16 +98,17 @@ function convertAltResourcesIn(input){
  * 
  */
 async function convertTraitsOut(allTraits){
-    if(allTraits.length == 0 || allTraits[0] === ''){
+    if(!allTraits || allTraits == ''){
         return null;
     }
+    const traitList = allTraits.split('_');
     let output = [];
     let promises = [];
     let promisesCustom = [];
     let traits = [];
     let customTraits = [];
 
-    allTraits.forEach((trait)=>{
+    traitList.forEach((trait)=>{
         if(trait.includes('custom')){
             customTraits.push(trait);
         }else{
@@ -178,12 +180,13 @@ function convertTraitsIn(traits){
  * 
  */
 async function convertFeaturesOut(features){
-    if(features.length == 0 || features[0] === ''){
+    if(!features || features == ''){
         return null;
     }
+    const featList = features.split('_');
     let output = [];
     let promises = [];
-    features.forEach((feature) =>{
+    featList.forEach((feature) =>{
         promises.push(dndApi.getFeatureInfo(feature));
     })
     await Promise.allSettled(promises).then((results)=>{
@@ -225,11 +228,12 @@ function convertFeaturesIn(features){
  * ['1*item-name',...] => [{name : item name, amount : 1},...]
  */
 function convertEquipmentOut(equipment){
-    if(equipment.length == 0 || equipment[0] === ''){
+    if(!equipment || equipment == ''){
         return null;
     }
+    const equipList = equipment.split('_');
     let output = [];
-    equipment.forEach((item)=>{
+    equipList.forEach((item)=>{
         let [amount, name] = item.split('*');
         output.push({
             name : name.replaceAll('-',' '),
@@ -262,12 +266,13 @@ function convertEquipmentIn(equipment){
  * 
  */
 async function convertSpellsOut(spells){
-    if(spells.length == 0 || spells[0] === ''){
+    if(!spells || spells == ''){
         return null;
     }
+    const spellList = spells.split('_');
     let output = [];
     let promises = [];
-    spells.forEach((spell)=>{
+    spellList.forEach((spell)=>{
         promises.push(dndApi.getSpell(spell));
     });
     await Promise.allSettled(promises).then((results)=>{
@@ -317,18 +322,22 @@ function convertSpellsIn(spells){
  * Then checks the external API
  */
 async function convertAttacksOut(attacks){
+    if(!attacks || attacks == ''){
+        return null;
+    };
+
+    const atkList = attacks.split('_');
+
     let output = [];
     let customAtks = [];
     let extAtks = []
     let dbPromises = [];
     let extPromises = [];
     
-    if(attacks.length == 0 || attacks[0] === ''){
-        return null;
-    };
+    
 
     //Filter b/w normal and custom
-    attacks.forEach((attack)=>{
+    atkList.forEach((attack)=>{
         if(attack.includes('custom')){
             customAtks.push(attack);
         }else{
@@ -400,7 +409,7 @@ function convertAttacksIn(attacks){
 }
 
 module.exports = {
-    completeCharacterData,
+    completeCharacterDataOut,
     convertAltResourcesOut,
     convertTraitsOut,
     convertFeaturesOut,
