@@ -52,7 +52,7 @@ describe('convertTraits tests', ()=>{
         expect(output.length).toEqual(1);
         const trait = output[0];
         expect(trait.charID).toEqual(1);
-        expect(trait.name).toEqual('Custome Trait 1'); //Yeah i did a typo in the seed file
+        expect(trait.name).toEqual('Custom Trait 1'); 
         expect(trait.source).toEqual('Class');
         expect(trait.description).toEqual('This is the first custom trait!');
 
@@ -75,7 +75,7 @@ describe('convertTraits tests', ()=>{
         expect(output.length).toEqual(2);
         const trait1 = output[0];
         expect(trait1.charID).toEqual(1);
-        expect(trait1.name).toEqual('Custome Trait 1'); //Yeah i did a typo in the seed file
+        expect(trait1.name).toEqual('Custom Trait 1'); 
         expect(trait1.source).toEqual('Class');
         expect(trait1.description).toEqual('This is the first custom trait!');
         const trait2 = output[1];
@@ -107,7 +107,7 @@ describe('convertTraits tests', ()=>{
         expect(output.length).toEqual(2);
         const trait1 = output[0];
         expect(trait1.charID).toEqual(1);
-        expect(trait1.name).toEqual('Custome Trait 1'); //Yeah i did a typo in the seed file
+        expect(trait1.name).toEqual('Custom Trait 1'); 
         expect(trait1.source).toEqual('Class');
         expect(trait1.description).toEqual('This is the first custom trait!');
         const trait2 = output[1];

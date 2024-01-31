@@ -114,6 +114,23 @@ CREATE TABLE chars_custom_traits(
     PRIMARY KEY (char_id, trait_id)
 );
 
+CREATE TABLE custom_features(
+    id SERIAL PRIMARY KEY,
+    charID INTEGER NOT NULL
+        REFERENCES characters ON DELETE CASCADE,
+    name TEXT,
+    source TEXT,
+    description TEXT
+);
+
+CREATE TABLE chars_custom_features(
+    char_id INTEGER
+        REFERENCES characters ON DELETE CASCADE,
+    feature_id INTEGER
+        REFERENCES custom_features ON DELETE CASCADE,
+    PRIMARY KEY (char_id, feature_id)
+);
+
 CREATE TABLE custom_attacks(
     id SERIAL PRIMARY KEY,
     charID INTEGER NOT NULL

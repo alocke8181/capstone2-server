@@ -59,7 +59,7 @@ class Character {
         this.flaws = charSQL.flaws;
 
         this.traits = charSQL.traits; //Converted to objects and custom traits
-        this.features = charSQL.features; //Converted to objects
+        this.features = charSQL.features; //Converted to objects and custom feats
         this.languages = charSQL.languages.split('_') || null;
         this.equipProfs = charSQL.equipprofs.split('_') || null;
 
@@ -168,6 +168,7 @@ class Character {
      * This does not make any external api calls
      */
     static async get(id){
+        console.log('INTERNAL','GET CHARACTER', id);
         const results = await db.query(`
             SELECT * FROM characters
             WHERE id=$1`,

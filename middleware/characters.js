@@ -1,4 +1,5 @@
 const Trait = require('../models/Trait');
+const Feature = require('../models/Feature');
 const Attack = require('../models/Attack');
 const dndApi = require('../dndApi');
 
@@ -9,27 +10,40 @@ const dndApi = require('../dndApi');
  * Converts arrays of strings to arrays of objects 
  */
 async function completeCharacterDataOut(character){
-    const raceData = await dndApi.getRaceInfo(character.race);
-    const classData = await dndApi.getClassInfo(character.className)
-    const classLevelData = await dndApi.getClassLevelInfo(character.className, character.level)
+    const raceData = await dndApi.getRaceInfo(character.race.toLowerCase().replace(' ','-'));
+    const classData = await dndApi.getClassInfo(character.className.toLowerCase())
+    const classLevelData = await dndApi.getClassLevelInfo(character.className.toLowerCase(), character.level)
     character.profBonus = classLevelData.prof_bonus;
-    if(character.traits.includes('jack-of-all-trades')){
+    if(character.features.includes('jack-of-all-trades')){
         character.jackOfAllTrades = true;
     }
     character.speed = character.speed + raceData.speed;
     character.hitDice = classData.hit_die;
 
     const spellData = classLevelData.spellcasting;
-    character.cantripsKnown = spellData.cantrips_known;
-    character.levelOneSlots = spellData.spell_slots_level_1;
-    character.levelTwoSlots = spellData.spell_slots_level_2;
-    character.levelThreeSlots = spellData.spell_slots_level_3;
-    character.levelFourSlots = spellData.spell_slots_level_4;
-    character.levelFiveSlots = spellData.spell_slots_level_5;
-    character.levelSixSlots = spellData.spell_slots_level_6;
-    character.levelSevenSlots = spellData.spell_slots_level_7;
-    character.levelEightSlots = spellData.spell_slots_level_8;
-    character.levelNineSlots = spellData.spell_slots_level_9;
+    if(!spellData){
+        character.cantripsKnown = 0;
+        character.levelOneSlots = 0;
+        character.levelTwoSlots = 0;
+        character.levelThreeSlots = 0;
+        character.levelFourSlots = 0;
+        character.levelFiveSlots = 0;
+        character.levelSixSlots = 0;
+        character.levelSevenSlots = 0;
+        character.levelEightSlots = 0;
+        character.levelNineSlots = 0;
+    }else{
+        character.cantripsKnown = spellData.cantrips_known;
+        character.levelOneSlots = spellData.spell_slots_level_1;
+        character.levelTwoSlots = spellData.spell_slots_level_2;
+        character.levelThreeSlots = spellData.spell_slots_level_3;
+        character.levelFourSlots = spellData.spell_slots_level_4;
+        character.levelFiveSlots = spellData.spell_slots_level_5;
+        character.levelSixSlots = spellData.spell_slots_level_6;
+        character.levelSevenSlots = spellData.spell_slots_level_7;
+        character.levelEightSlots = spellData.spell_slots_level_8;
+        character.levelNineSlots = spellData.spell_slots_level_9;
+    }
 
     character.altResources = convertAltResourcesOut(character.altResources);
     character.traits = await convertTraitsOut(character.traits);
@@ -49,6 +63,8 @@ async function completeCharacterDataOut(character){
     character.levelNine = await convertSpellsOut(character.levelNine);
 
     character.attacks = await convertAttacksOut(character.attacks);
+
+    return character;
 }
 
 
@@ -93,32 +109,31 @@ function convertAltResourcesIn(resources){
 };
 
 /**
- * Convert all traits from strings into objects
+ * Convert all feats from strings into objects
  * Queries the external API or DB for data
  * 
  */
-async function convertTraitsOut(allTraits){
-    if(!allTraits || allTraits == ''){
+async function convertTraitsOut(allFeatures){
+    if(!allFeatures || allFeatures == ''){
         return null;
     }
-    const traitList = allTraits.split('_');
+    const featList = allFeatures.split('_');
     let output = [];
     let promises = [];
     let promisesCustom = [];
-    let traits = [];
-    let customTraits = [];
+    let feats = [];
+    let customFeats = [];
 
-    traitList.forEach((trait)=>{
-        if(trait.includes('custom')){
-            customTraits.push(trait);
+    featList.forEach((feature)=>{
+        if(feature.includes('custom')){
+            customFeats.push(feature);
         }else{
-            traits.push(trait);
+            feats.push(feature);
         };
     });
 
-    //console.log(customTraits);
-    customTraits.forEach((trait)=>{
-        promisesCustom.push(Trait.get(trait));
+    customFeats.forEach((feature)=>{
+        promisesCustom.push(Trait.get(feature));
     });
     await Promise.allSettled(promisesCustom).then((results)=>{
         results.forEach((result)=>{
@@ -133,8 +148,8 @@ async function convertTraitsOut(allTraits){
         });
     });
 
-    traits.forEach((trait) =>{
-        promises.push(dndApi.getTraitInfo(trait));
+    feats.forEach((feature) =>{
+        promises.push(dndApi.getTraitInfo(feature));
     })
     await Promise.allSettled(promises).then((results)=>{
         results.forEach((result)=>{
@@ -147,7 +162,7 @@ async function convertTraitsOut(allTraits){
                 output.push({
                     index : result.value.data.index,
                     name : result.value.data.name,
-                    description : result.value.data.desc.join()
+                    description : result.value.data.desc.join(' ')
                 });
             }
         });
@@ -156,37 +171,65 @@ async function convertTraitsOut(allTraits){
 }
 
 /**
- * Convert all the trait objects into a single string
+ * Convert all the feature objects into a single string
  */
 
-function convertTraitsIn(traits){
-    if(!traits || traits.length ==0){
+function convertTraitsIn(feats){
+    if(!feats || feats.length ==0){
         return null;
     }
     let output = [];
-    traits.forEach((trait)=>{
-        if(trait.id){
-            output.push('custom-' + trait.id.toString());
+    feats.forEach((feature)=>{
+        if(feature.id){
+            output.push('custom-' + feature.id.toString());
         }else{
-            output.push(trait.index);
+            output.push(feature.index);
         };
     });
     return output.join('_');
 };
 
 /**
- * Convert all traits from strings into objects
+ * Convert all feats from strings into objects
  * Queries the external API for data
  * 
  */
-async function convertFeaturesOut(features){
-    if(!features || features == ''){
+async function convertFeaturesOut(allFeatures){
+    if(!allFeatures || allFeatures == ''){
         return null;
     }
-    const featList = features.split('_');
+    const featList = allFeatures.split('_');
     let output = [];
     let promises = [];
-    featList.forEach((feature) =>{
+    let promisesCustom = [];
+    let feats = [];
+    let customFeats = [];
+
+    featList.forEach((feature)=>{
+        if(feature.includes('custom')){
+            customFeats.push(feature);
+        }else{
+            feats.push(feature);
+        };
+    });
+
+    customFeats.forEach((feature)=>{
+        promisesCustom.push(Feature.get(feature));
+    });
+    await Promise.allSettled(promisesCustom).then((results)=>{
+        results.forEach((result)=>{
+            if(result.status === 'rejected'){
+                output.push({
+                    name : 'Custom Feature Not Found',
+                    description : String(result.reason).slice(0,32)
+                });
+            }else{
+                output.push(result.value);
+            }
+        });
+    });
+
+    feats.forEach((feature) =>{
         promises.push(dndApi.getFeatureInfo(feature));
     })
     await Promise.allSettled(promises).then((results)=>{
@@ -195,14 +238,14 @@ async function convertFeaturesOut(features){
                 output.push({
                     name : 'Feature Not Found',
                     description : `No Path ${result.reason.request.path}`
-                });
+                })
             }else{
                 output.push({
                     index : result.value.data.index,
                     name : result.value.data.name,
-                    description : result.value.data.desc.join()
+                    description : result.value.data.desc.join(' ')
                 });
-            };
+            }
         });
     });
     return output;
@@ -286,7 +329,7 @@ async function convertSpellsOut(spells){
                 output.push({
                     index : result.value.data.index,
                     name : result.value.data.name,
-                    description : result.value.data.desc.join(),
+                    description : result.value.data.desc.join(' '),
                     higherLevels : result.value.data.higher_level || null,
                     range : result.value.data.range,
                     duration : result.value.data.duration,

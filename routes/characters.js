@@ -33,6 +33,7 @@ router.get('/', async (req,res,next)=>{
 router.get('/:id', async (req,res,next)=>{
     try{
         let character = await Character.get(req.params.id);
+        //console.log(character);
         character = await completeCharacterDataOut(character); 
         return res.json({character})
     }catch(e){

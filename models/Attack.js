@@ -26,6 +26,7 @@ class Attack{
     };
 
     static async get(attack){
+        console.log('\u001b[32m INTERNAL','\u001b[31m GET ATTACK \u001b[0m',attack);
         let id = attack.split('-')[1];
         const results = await db.query(`
             SELECT * FROM custom_attacks
