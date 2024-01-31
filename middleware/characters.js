@@ -7,8 +7,8 @@ const dndApi = require('../dndApi');
  * 1*1*bardic-inspiration => {max : 1, curr : 1, name : bardic inspiration}
  * 
  */
-function convertAltResources(input){
-    if(input.length==0){
+function convertAltResourcesOut(input){
+    if(input.length==0 || input[0] === ''){
         return null;
     }
     let output = [];
@@ -25,12 +25,28 @@ function convertAltResources(input){
 }
 
 /**
+ * Convert each object into a string and then combine them
+ * [{max : 1, curr : 1, name : bardic inspiration},...] => '1*1*bardic-inspiration_...
+ */
+function convertAltResourcesIn(input){
+    if(!input || input.length ==0){
+        return null;
+    }
+    const output = [];
+    input.forEach((input)=>{
+        let text = input.max.toString() + '*' + input.curr.toString() + '*' + input.name.replaceAll(' ','-');
+        output.push(text);
+    });
+    return output.join('_');
+};
+
+/**
  * Convert all traits from strings into objects
  * Queries the external API or DB for data
  * 
  */
-async function convertTraits(allTraits){
-    if(allTraits.length == 0){
+async function convertTraitsOut(allTraits){
+    if(allTraits.length == 0 || allTraits[0] === ''){
         return null;
     }
     let output = [];
@@ -87,12 +103,31 @@ async function convertTraits(allTraits){
 }
 
 /**
+ * Convert all the trait objects into a single string
+ */
+
+function convertTraitsIn(traits){
+    if(!traits || traits.length ==0){
+        return null;
+    }
+    let output = [];
+    traits.forEach((trait)=>{
+        if(trait.id){
+            output.push('custom-' + trait.id.toString());
+        }else{
+            output.push(trait.index);
+        };
+    });
+    return output.join('_');
+};
+
+/**
  * Convert all traits from strings into objects
  * Queries the external API for data
  * 
  */
-async function convertFeatures(features){
-    if(features.length == 0){
+async function convertFeaturesOut(features){
+    if(features.length == 0 || features[0] === ''){
         return null;
     }
     let output = [];
@@ -120,11 +155,26 @@ async function convertFeatures(features){
 }
 
 /**
+ * Convert the array of features into a single string
+ */
+
+function convertFeaturesIn(features){
+    if(!features || features.length ==0){
+        return null;
+    }
+    let output = [];
+    features.forEach((feature)=>{
+        output.push(feature.index);
+    });
+    return output.join('_');
+};
+
+/**
  * Converts strings of items into objects
  * ['1*item-name',...] => [{name : item name, amount : 1},...]
  */
-function convertEquipment(equipment){
-    if(equipment.length == 0){
+function convertEquipmentOut(equipment){
+    if(equipment.length == 0 || equipment[0] === ''){
         return null;
     }
     let output = [];
@@ -132,11 +182,26 @@ function convertEquipment(equipment){
         let [amount, name] = item.split('*');
         output.push({
             name : name.replaceAll('-',' '),
-            amount : parseInt(amount)
+            amount : parseInt(amount) || '1'
         })
     })
     return output;
 }
+
+/**
+ * Convert the array of equipment into a single string
+ */
+
+function convertEquipmentIn(equipment){
+    if(!equipment || equipment.length ==0){
+        return null;
+    }
+    let output = [];
+    equipment.forEach((item)=>{
+        output.push(item.amount.toString() + '*' + item.name.replaceAll(' ','-'));
+    });
+    return output.join('_');
+};
 
 
 /**
@@ -145,8 +210,8 @@ function convertEquipment(equipment){
  * Since there is such a wide range of spells, some will have null attributes
  * 
  */
-async function convertSpells(spells){
-    if(spells.length == 0){
+async function convertSpellsOut(spells){
+    if(spells.length == 0 || spells[0] === ''){
         return null;
     }
     let output = [];
@@ -181,20 +246,33 @@ async function convertSpells(spells){
     });
     return output;
 }
+/**
+ * Convert an array of spells into a single string
+ */
+function convertSpellsIn(spells){
+    if(!spells || spells.length ==0){
+        return null;
+    }
+    let output = [];
+    spells.forEach((spell)=>{
+        output.push(spell.index);
+    });
+    return output.join('_');
+}
 
 /**
  * Convert from attack strings to objects
  * Checks if it's a custom attack first,
  * Then checks the external API
  */
-async function convertAttacks(attacks){
+async function convertAttacksOut(attacks){
     let output = [];
     let customAtks = [];
     let extAtks = []
     let dbPromises = [];
     let extPromises = [];
     
-    if(attacks.length == 0){
+    if(attacks.length == 0 || attacks[0] === ''){
         return null;
     };
 
@@ -251,11 +329,36 @@ async function convertAttacks(attacks){
     return output;
 };
 
+/**
+ * Convert an array of attacks into a single string
+ */
+
+function convertAttacksIn(attacks){
+    if(!attacks || attacks.length ==0){
+        return null;
+    }
+    let output = [];
+    attacks.forEach((attack)=>{
+        if(attack.id){
+            output.push('custom-' + attack.id.toString());
+        }else{
+            output.push(attack.index);
+        };
+    });
+    return output.join('_');
+}
+
 module.exports = {
-    convertAltResources,
-    convertTraits,
-    convertFeatures,
-    convertEquipment,
-    convertSpells,
-    convertAttacks
+    convertAltResourcesOut,
+    convertTraitsOut,
+    convertFeaturesOut,
+    convertEquipmentOut,
+    convertSpellsOut,
+    convertAttacksOut,
+    convertAltResourcesIn,
+    convertTraitsIn,
+    convertFeaturesIn,
+    convertEquipmentIn,
+    convertSpellsIn,
+    convertAttacksIn,
 }
