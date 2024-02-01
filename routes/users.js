@@ -8,15 +8,17 @@ const router = express.Router();
 
 /** POST / {user} => {user, token}
  * 
- * Admin only route to add a user
- * Intended to be used to add other admins
  * 
  */
 
-router.post('/', isAdmin, async (req,res,next)=>{
-    const user = await User.post(req.body);
-    const token = createToken(user);
-    return res.json({user, token});
+router.post('/', async (req,res,next)=>{
+    try{
+        const user = await User.post(req.body);
+        const token = createToken(user);
+        return res.json({user, token});
+    }catch(e){
+        return next(e);
+    }
 });
 
 /** GET / => {users : [{username, email},...]}

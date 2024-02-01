@@ -67,7 +67,63 @@ async function completeCharacterDataOut(character){
     return character;
 }
 
+/**
+ * Convert from a JS object into a SQL object
+ * Delete many of the calculated properties
+ * Convert arrays into single strings
+ */
 
+async function completeCharacterDataIn(character){
+    delete character.strMod;
+    delete character.dexMod;
+    delete character.conMod;
+    delete character.intMod;
+    delete character.wisMod;
+    delete character.chaMod;
+
+    delete character.profBonus;
+    character.savingProfs = character.savingProfs.join('_') || null;
+    character.skillProfs = character.skillProfs.join('_') || null;
+    delete character.jackOfAllTrades;
+    delete character.passPerc;
+
+    delete character.speed;
+    delete character.initiative;
+    delete character.hitDice;
+    delete character.hitDiceMax;
+    character.altResources = convertAltResourcesIn(character.altResources);
+
+    character.traits = convertTraitsIn(character.traits);
+    character.features = convertFeaturesIn(character.features);
+    character.languages = character.languages.join('_') || null;
+    character.equipProfs = character.equipProfs.join('_') || null;
+
+    character.equipment = convertEquipmentIn(character.equipment);
+
+    character.attacks = convertAttacksIn(character.attacks);
+
+    delete character.cantripsKnown;
+    delete character.levelOneSlots;
+    delete character.levelTwoSlots;
+    delete character.levelThreeSlots;
+    delete character.levelFourSlots;
+    delete character.levelFiveSlots;
+    delete character.levelSixSlots;
+    delete character.levelSevenSlots;
+    delete character.levelEightSlots;
+    delete character.levelNineSlots;
+
+    character.cantrips = convertSpellsIn(character.cantrips);
+    character.levelOne = convertSpellsIn(character.levelOne);
+    character.levelTwo = convertSpellsIn(character.levelTwo);
+    character.levelThree = convertSpellsIn(character.levelThree);
+    character.levelFour = convertSpellsIn(character.levelFour);
+    character.levelFive = convertSpellsIn(character.levelFive);
+    character.levelSix = convertSpellsIn(character.levelSix);
+    character.levelSeven = convertSpellsIn(character.levelSeven);
+    character.levelEight = convertSpellsIn(character.levelEight);
+    character.levelNine = convertSpellsIn(character.levelNine);
+}
 
 /**
  * Convert each string in the alt resources into an object
@@ -172,18 +228,19 @@ async function convertTraitsOut(allFeatures){
 
 /**
  * Convert all the feature objects into a single string
+ * Traits will be created/edited/deleted by the client on the app
  */
 
-function convertTraitsIn(feats){
-    if(!feats || feats.length ==0){
+function convertTraitsIn(traits){
+    if(!traits || traits.length ==0){
         return null;
     }
     let output = [];
-    feats.forEach((feature)=>{
-        if(feature.id){
-            output.push('custom-' + feature.id.toString());
+    traits.forEach((trait)=>{
+        if(trait.id){
+            output.push('custom-' + trait.id.toString());
         }else{
-            output.push(feature.index);
+            output.push(trait.index);
         };
     });
     return output.join('_');
@@ -253,15 +310,20 @@ async function convertFeaturesOut(allFeatures){
 
 /**
  * Convert the array of features into a single string
+ * Custom feats are created/edited/saved by the client on the app
  */
 
-function convertFeaturesIn(features){
-    if(!features || features.length ==0){
+function convertFeaturesIn(feats){
+    if(!feats || feats.length ==0){
         return null;
     }
     let output = [];
-    features.forEach((feature)=>{
-        output.push(feature.index);
+    feats.forEach((feat)=>{
+        if(feat.id){
+            output.push('custom-' + feat.id.toString());
+        }else{
+            output.push(feat.index);
+        };
     });
     return output.join('_');
 };
@@ -434,6 +496,7 @@ async function convertAttacksOut(attacks){
 
 /**
  * Convert an array of attacks into a single string
+ * Custom attacks are CRUD'ed by the client on the app
  */
 
 function convertAttacksIn(attacks){
@@ -459,6 +522,7 @@ module.exports = {
     convertEquipmentOut,
     convertSpellsOut,
     convertAttacksOut,
+    completeCharacterDataIn,
     convertAltResourcesIn,
     convertTraitsIn,
     convertFeaturesIn,

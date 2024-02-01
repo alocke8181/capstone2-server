@@ -9,6 +9,9 @@ const {authJWT} = require('./middleware/auth');
 const authRoutes = require('./routes/auth');
 const userRoutes = require('./routes/users');
 const charRoutes = require('./routes/characters');
+const traitRoutes = require('./routes/traits');
+const featRoutes = require('./routes/features');
+const atkRoutes = require('./routes/attacks');
 
 const app = express();
 
@@ -20,6 +23,9 @@ app.use(authJWT);
 app.use('/auth', authRoutes);
 app.use('/users', userRoutes);
 app.use('/characters', charRoutes);
+app.use('/traits', traitRoutes);
+app.use('/features', featRoutes);
+app.use('/attacks', atkRoutes);
 
 app.use((req,res,next)=>{
     return next(new NotFoundError());
