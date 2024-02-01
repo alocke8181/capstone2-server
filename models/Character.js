@@ -114,24 +114,21 @@ class Character {
 
 
 
-    /** Create a character from data, add to db, return just the ID if successful
+    /** Create a character from starter data, add to DB, and return
      * Since the only thing changing is an ID being added, to save time the server
      * will only return the ID number on success instead of the whole data to be parsed
      * 
      */
 
-    static async post(newCharacter){
-        //Helper function to convert the object into a SQL string
-        //NEED TO FIGURE OUT WHAT CHARTOSQL WILL DO AND 
-        const [sqlNames, sqlNumbers, dataToAdd] = characterToSQL(newCharacter);
+    static async post(data){
         const results = await db.query(`
             INSERT INTO characters
-            ${sqlNames}
-            VALUES ${sqlNumbers}
-            RETURNING id`,
-            dataToAdd);
-
-        return results.rows[0];
+            (creatorid, charname, race, classname, level)
+            VALUES ($1, $2, $3, $4, $5)
+            RETURNING *`,
+            [data.creatorID, data.charName, data.race.toLowerCase(), data.className.toLowerCase(), data.level]);
+        let character = new Character(results.rows[0]);
+        return character;
     }
 
     /**
@@ -184,12 +181,10 @@ class Character {
 
     /**
      * Update a character in the database
-     * Current plan is to update everything regardless of changes
-     *  In the future, find a way to only update data that's changed.
-     * USE CHARTOSQL WITH SQLFORUPDATE
      */
     static async patch(id, data){
-        const {setCols, values, lastIdx} = sqlForUpdate(data)
+        const {setCols, values} = sqlForUpdate(data)
+        const lastIdx = '$'+(values.length + 1);
         const query = `UPDATE characters
                         SET ${setCols}
                         WHERE id = ${lastIdx}
@@ -198,7 +193,11 @@ class Character {
         if(!results.rows[0]){
             throw new NotFoundError(`No character id: ${id}`);
         };
-        return results.rows[0];
+        const id = results.rows[0].id;
+        const charQuery = await db.query(`
+            SELECT * from characters
+            WHERE id = $1`,[id]);
+        return new Character(charQuery.rows[0]);
         
     }
 
