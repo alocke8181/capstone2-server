@@ -41,6 +41,21 @@ router.get('/:id', async (req,res,next)=>{
 })
 
 /**
+ * GET /user/:id [id] = {characters : [{},{}]}
+ * Get a list of characters based on a user ID
+ * Does not return all info, only key stuff
+ */
+
+router.get('/users/:id', async (req,res,next)=>{
+    try{
+        const characters = await Character.getList(req.params.id);
+        return res.json({characters});
+    }catch(e){
+        return next(e);
+    };
+});
+
+/**
  * POST / {creatorID, charName, race, className, level} => {character data}
  * Create a new character based on a small amount of starting data
  * This will be entered via a form client-side

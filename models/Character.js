@@ -115,8 +115,6 @@ class Character {
 
 
     /** Create a character from starter data, add to DB, and return
-     * Since the only thing changing is an ID being added, to save time the server
-     * will only return the ID number on success instead of the whole data to be parsed
      * 
      */
 
