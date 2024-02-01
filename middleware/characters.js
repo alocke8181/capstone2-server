@@ -169,27 +169,28 @@ function convertAltResourcesIn(resources){
  * Queries the external API or DB for data
  * 
  */
-async function convertTraitsOut(allFeatures){
-    if(!allFeatures || allFeatures == ''){
+async function convertTraitsOut(allTraits){
+    if(!allTraits || allTraits == ''){
         return null;
     }
-    const featList = allFeatures.split('_');
+    const traitList = allTraits.split('_');
     let output = [];
     let promises = [];
     let promisesCustom = [];
-    let feats = [];
-    let customFeats = [];
+    let traits = [];
+    let customTraits = [];
 
-    featList.forEach((feature)=>{
-        if(feature.includes('custom')){
-            customFeats.push(feature);
+    traitList.forEach((trait)=>{
+        if(trait.includes('custom')){
+            customTraits.push(trait);
         }else{
-            feats.push(feature);
+            traits.push(trait);
         };
     });
 
-    customFeats.forEach((feature)=>{
-        promisesCustom.push(Trait.get(feature));
+    customTraits.forEach((trait)=>{
+        let id = trait.split('-')[1]
+        promisesCustom.push(Trait.get(id));
     });
     await Promise.allSettled(promisesCustom).then((results)=>{
         results.forEach((result)=>{
@@ -204,8 +205,8 @@ async function convertTraitsOut(allFeatures){
         });
     });
 
-    feats.forEach((feature) =>{
-        promises.push(dndApi.getTraitInfo(feature));
+    traits.forEach((trait) =>{
+        promises.push(dndApi.getTraitInfo(trait));
     })
     await Promise.allSettled(promises).then((results)=>{
         results.forEach((result)=>{
@@ -271,7 +272,8 @@ async function convertFeaturesOut(allFeatures){
     });
 
     customFeats.forEach((feature)=>{
-        promisesCustom.push(Feature.get(feature));
+        let id = feature.split('-')[1];
+        promisesCustom.push(Feature.get(id));
     });
     await Promise.allSettled(promisesCustom).then((results)=>{
         results.forEach((result)=>{
@@ -452,7 +454,8 @@ async function convertAttacksOut(attacks){
 
     //Get custom
     customAtks.forEach((attack)=>{
-        dbPromises.push(Attack.get(attack));
+        let id = attack.split('-')[1]
+        dbPromises.push(Attack.get(id));
     });
     await Promise.allSettled(dbPromises).then((results)=>{
         results.forEach((result)=>{

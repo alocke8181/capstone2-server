@@ -150,7 +150,7 @@ class Character {
         const results = await db.query(`
         SELECT id, charname, race, classname, level
         FROM characters
-        WHERE creator_ID = $1`,
+        WHERE creatorid = $1`,
         [userID]);
 
         return results.rows;
@@ -191,10 +191,10 @@ class Character {
         if(!results.rows[0]){
             throw new NotFoundError(`No character id: ${id}`);
         };
-        const id = results.rows[0].id;
+        const charID = results.rows[0].id;
         const charQuery = await db.query(`
             SELECT * from characters
-            WHERE id = $1`,[id]);
+            WHERE id = $1`,[charID]);
         return new Character(charQuery.rows[0]);
         
     }

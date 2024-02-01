@@ -46,7 +46,7 @@ router.get('/:id', async (req,res,next)=>{
  * Does not return all info, only key stuff
  */
 
-router.get('/users/:id', async (req,res,next)=>{
+router.get('/user/:id', async (req,res,next)=>{
     try{
         const characters = await Character.getList(req.params.id);
         return res.json({characters});

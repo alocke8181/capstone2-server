@@ -16,9 +16,8 @@ class Feature{
      * 'custom-1' => {feature}
      * Traits have id, charID, name, source, and description
      */
-    static async get(feature){
-        console.log('\u001b[32m INTERNAL','\u001b[33m GET FEATURE \u001b[0m',feature);
-        let id = feature.split('-')[1];
+    static async get(id){
+        console.log('\u001b[32m INTERNAL','\u001b[33m GET FEATURE \u001b[0m',id);
         const results = await db.query(`
         SELECT * FROM custom_features
         WHERE id = $1`,
@@ -26,7 +25,7 @@ class Feature{
         if(!results.rows[0]){
             throw new NotFoundError(`No feature id: ${id}`);
         };
-        return new Trait(results.rows[0]);
+        return new Feature(results.rows[0]);
     }
 
     /**

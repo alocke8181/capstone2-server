@@ -16,9 +16,8 @@ class Trait{
      * 'custom-1' => {trait}
      * Traits have id, charID, name, source, and description
      */
-    static async get(trait){
-        console.log('\u001b[32m INTERNAL','\u001b[33m GET TRAIT \u001b[0m',trait);
-        let id = trait.split('-')[1];
+    static async get(id){
+        console.log('\u001b[32m INTERNAL','\u001b[33m GET TRAIT \u001b[0m',id);
         const results = await db.query(`
         SELECT * FROM custom_traits
         WHERE id = $1`,

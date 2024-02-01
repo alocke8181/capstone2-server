@@ -3,6 +3,8 @@ const {isLoggedIn, isAdmin, isAdminOrUser} = require('../middleware/auth');
 const {BadRequestError} = require('../expressError');
 const User = require('../models/User');
 const {createToken} = require('../helpers/tokens');
+const jsonschema = require('jsonschema');
+const userPatchSchema = require('../schemas/userPatch.json');
 
 const router = express.Router();
 
@@ -63,6 +65,11 @@ router.get('/:id', async (req,res,next)=>{
 
 router.patch('/:id', async (req,res,next)=>{
     try{
+        const validator = jsonschema.validate(req.body,userPatchSchema);
+        if(!validator.valid){
+            const errs = validator.errors.map(e => e.stack);
+            throw new BadRequestError(errs);
+        }
         const user = await User.patch(req.params.id, req.body);
         return res.json({user});
     }catch(e){
