@@ -30,6 +30,7 @@ CREATE TABLE characters(
     skillProfs TEXT,
     savingProfs TEXT,
     jackOfAllTrades BOOLEAN DEFAULT FALSE,
+    inspiration INTEGER,
 
     armorClass INTEGER,
     hpMax INTEGER CHECK (hpMax >= 0),

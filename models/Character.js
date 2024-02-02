@@ -39,6 +39,7 @@ class Character {
         this.skillProfs = charSQL.skillprofs.split('_') || null;
         this.jackOfAllTrades = false; //Calc'd from skills
         this.passPerc = this.wisMod + 10;
+        this.inspiration = charSQL.inspiration;
 
         this.speed = (this.dexMod * 5); //Calc'd from race data
         this.initiative = this.dexMod
