@@ -425,8 +425,6 @@ function convertSpellsIn(spells){
 
 /**
  * Convert from attack strings to objects
- * Checks if it's a custom attack first,
- * Then checks the external API
  */
 async function convertAttacksOut(attacks){
     if(!attacks || attacks == ''){
@@ -436,24 +434,11 @@ async function convertAttacksOut(attacks){
     const atkList = attacks.split('_');
 
     let output = [];
-    let customAtks = [];
-    let extAtks = []
     let dbPromises = [];
-    let extPromises = [];
     
-    
-
-    //Filter b/w normal and custom
-    atkList.forEach((attack)=>{
-        if(attack.includes('custom')){
-            customAtks.push(attack);
-        }else{
-            extAtks.push(attack);
-        };
-    });
 
     //Get custom
-    customAtks.forEach((attack)=>{
+    atkList.forEach((attack)=>{
         let id = attack.split('-')[1]
         dbPromises.push(Attack.get(id));
     });
@@ -470,32 +455,9 @@ async function convertAttacksOut(attacks){
         });
     });
 
-    //Get normal
-    extAtks.forEach((attack)=>{
-        extPromises.push(dndApi.getAttack(attack));
-    });
-    await Promise.allSettled(extPromises).then((results)=>{
-        results.forEach((result)=>{
-            if(result.status === 'rejected'){
-                output.push({
-                    name : 'Attack Not Found',
-                    description : `No Path ${result.reason.request.path}`
-                });
-            }else{
-                output.push({
-                    index : result.value.data.index,
-                    name : result.value.data.name,
-                    damage : result.value.data.damage,
-                    range : result.value.data.range,
-                    props : result.value.data.properties,
-                    twoHandDmg : result.value.data.two_handed_damage || null
-                });
-            }
-        });
-    });
-
     return output;
 };
+
 
 /**
  * Convert an array of attacks into a single string
@@ -508,11 +470,7 @@ function convertAttacksIn(attacks){
     }
     let output = [];
     attacks.forEach((attack)=>{
-        if(attack.id){
-            output.push('custom-' + attack.id.toString());
-        }else{
-            output.push(attack.index);
-        };
+        output.push('custom-' + attack.id.toString());
     });
     return output.join('_');
 }
