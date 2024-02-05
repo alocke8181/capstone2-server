@@ -1,6 +1,8 @@
+const {BadRequestError} = require('../expressError')
+
 //Export to helpers
 function sqlForUpdate(data){
-    const keys = Object.keys(dataToUpdate);
+    const keys = Object.keys(data);
     if (keys.length === 0) throw new BadRequestError("No data");
 
     // {firstName: 'Aliya', age: 32} => ['"first_name"=$1', '"age"=$2']
@@ -10,7 +12,7 @@ function sqlForUpdate(data){
 
     return {
         setCols: cols.join(", "),
-        values: Object.values(dataToUpdate),
+        values: Object.values(data),
     };
 }
 

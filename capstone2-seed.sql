@@ -56,7 +56,7 @@ VALUES (1, 'Gale Dekarios','human','','wizard','sage','Lawful Good',1,0,
         'Karlach hasnt lived in a long time, and feels she has a lot of catching up to do. Any experience, any sensation, any connection she can have will mean everything to her.',
         'The Archdevil Zariel still values Karlach as one of her prize inventions, and the engine in her body is a miraculous feat of engineering to a collector with a fine eye.',
         'Her own mechanical heart is what allows Karlach to turn any battle into wraths inferno, but she burns herself up with no regard for her own life.',
-        'darkvision_hellish-resistance_infernal-legacy','rage_barbarian-unarmored-defense_military-rank_custom-2','common_infernal','light-armor_medium-armor_shields_martial-weapons_simple-weapons_dice-set_vehicles-land',
+        'darkvision_hellish-resistance_infernal-legacy','rage_barbarian-unarmored-defense_custom-2','common_infernal','light-armor_medium-armor_shields_martial-weapons_simple-weapons_dice-set_vehicles-land',
         '1*common-clothes_1*greataxe_2*javelin_1*studded-leather_1*bedroll_1*mess-kit_5*rations_50*rope_1*tinderbox_1*torch_1*waterskin',
         '1*1*bardic-inspiration_2*2*test-resource',
         10,20,30,
@@ -85,9 +85,9 @@ VALUES (1,1),
 
 INSERT INTO custom_attacks (charID, name, attackSkill, attackMod, isProf, dmgDice, numDice, dmgSkill,
                                 dmgMod, dmgType, altDmgDice, altNumDice, altDmgSkill, altDmgMod, altDmgType,
-                                description, savingSkill, savingEffect)
-VALUES (1,'Atk 1','wis',1,TRUE,8,1,'wis',1,'Psychic',0,0,'',0,'','Custom attack 1 for Gale','wis','Half Damage'),
-        (2,'Atk 2','str',2,TRUE,10,2,'str',2,'Bludgeoning',6,1,'str',0,'Thunder','Custom attack 2 for Karlach','con','Half Damage');
+                                description, savingSkill, savingEffect, range)
+VALUES (1,'Atk 1','wis',1,TRUE,8,1,'wis',1,'Psychic',0,0,'',0,'','Custom attack 1 for Gale','wis','Half Damage','Melee'),
+        (2,'Atk 2','str',2,TRUE,10,2,'str',2,'Bludgeoning',6,1,'str',0,'Thunder','Custom attack 2 for Karlach','con','Half Damage','30 feet');
 
 INSERT INTO chars_custom_attacks (char_id, attack_id)
 VALUES (1,1),

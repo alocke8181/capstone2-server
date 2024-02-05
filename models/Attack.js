@@ -17,12 +17,14 @@ class Attack{
         this.dmgMod = data.dmgmod;
         this.dmgType = data.dmgtype;
         this.altDmgDice = data.altdmgdice;
+        this.altNumDice = data.altnumdice;
         this.altDmgSkill = data.altdmgskill;
         this.altDmgMod = data.altdmgmod;
         this.altDmgType = data.altdmgtype;
         this.description = data.description;
         this.savingSkill = data.savingskill;
         this.savingEffect = data.savingeffect;
+        this.range = data.range;
     };
 
     static async get(id){

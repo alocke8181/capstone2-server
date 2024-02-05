@@ -76,7 +76,8 @@ router.post('/', async (req,res,next)=>{
 router.patch('/:id', async (req,res,next)=>{
     try{
         const charSQL = completeCharacterDataIn(req.body);
-        const charReturn = await Character.patch(charSQL);
+        console.log(charSQL);
+        const charReturn = await Character.patch(req.params.id, charSQL);
         const character = await completeCharacterDataOut(charReturn);
         return res.json({character});
     }catch(e){

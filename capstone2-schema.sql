@@ -152,7 +152,8 @@ CREATE TABLE custom_attacks(
     altDmgType TEXT,
     description TEXT,
     savingSkill TEXT,
-    savingEffect TEXT
+    savingEffect TEXT,
+    range TEXT
 );
 
 CREATE TABLE chars_custom_attacks(

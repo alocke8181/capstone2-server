@@ -73,13 +73,28 @@ async function completeCharacterDataOut(character){
  * Convert arrays into single strings
  */
 
-async function completeCharacterDataIn(character){
+function completeCharacterDataIn(character){
+    delete character.id;
     delete character.strMod;
     delete character.dexMod;
     delete character.conMod;
     delete character.intMod;
     delete character.wisMod;
     delete character.chaMod;
+
+    character.strength = character.str;
+    character.dexterity = character.dex;
+    character.constitution = character.con;
+    character.intelligence = character.int;
+    character.wisdom = character.wis;
+    character.charisma = character.cha;
+
+    delete character.str;
+    delete character.dex;
+    delete character.con;
+    delete character.int;
+    delete character.wis;
+    delete character.cha;
 
     delete character.profBonus;
     character.savingProfs = character.savingProfs.join('_') || null;
@@ -123,6 +138,8 @@ async function completeCharacterDataIn(character){
     character.levelSeven = convertSpellsIn(character.levelSeven);
     character.levelEight = convertSpellsIn(character.levelEight);
     character.levelNine = convertSpellsIn(character.levelNine);
+
+    return character;
 }
 
 /**
@@ -323,7 +340,7 @@ function convertFeaturesIn(feats){
     feats.forEach((feat)=>{
         if(feat.id){
             output.push('custom-' + feat.id.toString());
-        }else{
+        }else if(feat.index){
             output.push(feat.index);
         };
     });
