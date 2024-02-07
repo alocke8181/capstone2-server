@@ -149,7 +149,7 @@ function completeCharacterDataIn(character){
  */
 function convertAltResourcesOut(resources){
     if(!resources || resources == ''){
-        return null;
+        return [];
     }
     const resourceList = resources.split('_');
     let output = [];
@@ -188,7 +188,7 @@ function convertAltResourcesIn(resources){
  */
 async function convertTraitsOut(allTraits){
     if(!allTraits || allTraits == ''){
-        return null;
+        return [];
     }
     const traitList = allTraits.split('_');
     let output = [];
@@ -271,7 +271,7 @@ function convertTraitsIn(traits){
  */
 async function convertFeaturesOut(allFeatures){
     if(!allFeatures || allFeatures == ''){
-        return null;
+        return [];
     }
     const featList = allFeatures.split('_');
     let output = [];
@@ -353,7 +353,7 @@ function convertFeaturesIn(feats){
  */
 function convertEquipmentOut(equipment){
     if(!equipment || equipment == ''){
-        return null;
+        return [];
     }
     const equipList = equipment.split('_');
     let output = [];
@@ -391,7 +391,7 @@ function convertEquipmentIn(equipment){
  */
 async function convertSpellsOut(spells){
     if(!spells || spells == ''){
-        return null;
+        return [];
     }
     const spellList = spells.split('_');
     let output = [];
@@ -415,9 +415,12 @@ async function convertSpellsOut(spells){
                     range : result.value.data.range,
                     duration : result.value.data.duration,
                     concentration : result.value.data.concentration,
+                    ritual : result.value.data.ritual,
+                    school : result.value.data.school,
                     castingTime : result.value.data.casting_time,
                     attackType : result.value.data.attack_type || null,
                     damage : result.value.data.damage || null,
+                    areaOfAffect : result.value.data.area_of_affect || null,
                     healLevels : result.value.data.heal_at_slot_level || null,
                     dc : result.value.data.dc || null
                 });
@@ -445,7 +448,7 @@ function convertSpellsIn(spells){
  */
 async function convertAttacksOut(attacks){
     if(!attacks || attacks == ''){
-        return null;
+        return [];
     };
 
     const atkList = attacks.split('_');
