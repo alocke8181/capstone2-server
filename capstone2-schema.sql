@@ -84,7 +84,7 @@ CREATE TABLE characters(
 
     age INTEGER,
     height VARCHAR(20),
-    weight VARCHAR(10),
+    weight VARCHAR(20),
     backstory TEXT,
     appearance TEXT,
     allies TEXT

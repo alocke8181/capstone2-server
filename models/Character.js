@@ -4,7 +4,7 @@
 const db = require('../db');
 const dndApi = require('../dndApi');
 const {BadRequestError, NotFoundError, ExpressError } = require('../expressError');
-const {characterToSQL, sqlToCharacter} = require('../helpers/characters');
+const {splitOrEmpty} = require('../helpers/characters');
 const {sqlForUpdate} = require('../helpers/sql')
 
 class Character {
@@ -35,8 +35,8 @@ class Character {
         this.chaMod = Math.floor((this.cha -10)/2);
 
         this.profBonus = 0; //Calc'd from class level data
-        this.savingProfs = charSQL.savingprofs.split('_') || null;
-        this.skillProfs = charSQL.skillprofs.split('_') || null;
+        this.savingProfs = splitOrEmpty(charSQL.savingprofs)
+        this.skillProfs = splitOrEmpty(charSQL.skillprofs)
         this.jackOfAllTrades = false; //Calc'd from skills
         this.passPerc = this.wisMod + 10;
         this.inspiration = charSQL.inspiration;
@@ -61,8 +61,8 @@ class Character {
 
         this.traits = charSQL.traits; //Converted to objects and custom traits
         this.features = charSQL.features; //Converted to objects and custom feats
-        this.languages = charSQL.languages.split('_') || null;
-        this.equipProfs = charSQL.equipprofs.split('_') || null;
+        this.languages = splitOrEmpty(charSQL.languages);
+        this.equipProfs = splitOrEmpty(charSQL.equipprofs);
 
         this.equipment = charSQL.equipment; //Converted to objects
         this.copper = charSQL.copper;
@@ -112,6 +112,8 @@ class Character {
         this.allies = charSQL.allies;
 
     }
+
+
 
 
 
