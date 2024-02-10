@@ -56,14 +56,15 @@ router.get('/user/:id', async (req,res,next)=>{
 });
 
 /**
- * POST / {creatorID, charName, race, className, level} => {character data}
+ * POST / {creatorID, charName, race, className, background, level, xp} => {character data}
  * Create a new character based on a small amount of starting data
  * This will be entered via a form client-side
+ * Return the id for the client to redirect to the character page
  */
 router.post('/', async (req,res,next)=>{
     try{
-        const character = await Character.post(req.body);
-        return res.json({character});
+        const id = await Character.post(req.body);
+        return res.json({id});
     }catch(e){
         return next(e);
     };

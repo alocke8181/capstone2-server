@@ -14,7 +14,7 @@ async function completeCharacterDataOut(character){
     const classData = await dndApi.getClassInfo(character.className.toLowerCase())
     const classLevelData = await dndApi.getClassLevelInfo(character.className.toLowerCase(), character.level)
     character.profBonus = classLevelData.prof_bonus;
-    if(character.features.includes('jack-of-all-trades')){
+    if(character.features !== null && character.features.includes('jack-of-all-trades')){
         character.jackOfAllTrades = true;
     }
     character.speed = character.speed + raceData.speed;

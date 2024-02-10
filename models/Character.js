@@ -124,12 +124,12 @@ class Character {
     static async post(data){
         const results = await db.query(`
             INSERT INTO characters
-            (creatorid, charname, race, classname, level)
-            VALUES ($1, $2, $3, $4, $5)
-            RETURNING *`,
-            [data.creatorID, data.charName, data.race.toLowerCase(), data.className.toLowerCase(), data.level]);
-        let character = new Character(results.rows[0]);
-        return character;
+            (creatorid, charname, race, classname, background, level, exp)
+            VALUES ($1, $2, $3, $4, $5, $6, $7)
+            RETURNING id`,
+            [data.creatorID, data.charName, data.race.toLowerCase(), data.className.toLowerCase(), data.background, data.level, data.exp]);
+        let id = results.rows[0]
+        return id;
     }
 
     /**
