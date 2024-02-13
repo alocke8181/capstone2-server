@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-
+const {isAdminOrUserForData} = require('../middleware/auth');
 const Feature = require('../models/Feature');
 
 /**
@@ -22,7 +22,7 @@ router.get('/:id', async (req,res,next)=>{
  * 
  * No auth req'd
  */
-router.post('/', async (req,res,next)=>{
+router.post('/', isAdminOrUserForData,async (req,res,next)=>{
     try{
         const feature = await Feature.post(req.body);
         return res.json({feature});
@@ -34,7 +34,7 @@ router.post('/', async (req,res,next)=>{
 /**
  * PATCH /:id {data} = > {updated feat}
  */
-router.patch('/:id', async (req,res,next)=>{
+router.patch('/:id', isAdminOrUserForData,async (req,res,next)=>{
     try{
         const feature = await Feature.patch(req.body);
         return res.json({feature});
@@ -46,7 +46,7 @@ router.patch('/:id', async (req,res,next)=>{
 /**
  * DELETE /:id => id
  */
-router.delete('/:id', async (req,res,next)=>{
+router.delete('/:id', isAdminOrUserForData,async (req,res,next)=>{
     try{
         const id = await Feature.delete(req.params.id);
         return res.json({success : id});

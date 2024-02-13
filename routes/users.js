@@ -10,7 +10,7 @@ const router = express.Router();
 
 /** POST / {user} => {user, token}
  * 
- * 
+ * No auth required
  */
 
 router.post('/', async (req,res,next)=>{
@@ -26,10 +26,10 @@ router.post('/', async (req,res,next)=>{
 /** GET / => {users : [{username, email},...]}
  *  Returns list of all users
  * 
- * Will require admin later
+ * Requires Admin
  */
 
-router.get('/', async (req,res,next)=>{
+router.get('/', isAdmin, async (req,res,next)=>{
     try{
         const users = await User.getAll();
         return res.json({users});
@@ -42,10 +42,10 @@ router.get('/', async (req,res,next)=>{
  * 
  * Returns {username, email, isAdmin}
  * 
- * Will require admin or logged in later
+ * Requires Admin or correct user
  */
 
-router.get('/:id', async (req,res,next)=>{
+router.get('/:id', isAdminOrUser, async (req,res,next)=>{
     try{
         const user = await User.get(req.params.id);
         return res.json({user});
@@ -60,10 +60,10 @@ router.get('/:id', async (req,res,next)=>{
  * 
  * Returns {username, email, isAdmin}
  * 
- * Will later require login or admin
+ * Requires Admin or correct user
  */
 
-router.patch('/:id', async (req,res,next)=>{
+router.patch('/:id', isAdminOrUser, async (req,res,next)=>{
     try{
         const validator = jsonschema.validate(req.body,userPatchSchema);
         if(!validator.valid){
@@ -79,11 +79,11 @@ router.patch('/:id', async (req,res,next)=>{
 
 /** DELETE /[id] => {deleted : id}
  * 
- * Will later require admin or logged in
+ * Requires admin or logged in 
  * 
  */
 
-router.delete('/:id', async (req,res,next)=>{
+router.delete('/:id', isAdminOrUser, async (req,res,next)=>{
     try{
         await User.delete(req.params.id);
         return res.json({deleted : req.params.id});

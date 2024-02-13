@@ -2,11 +2,11 @@ const jwt = require('jsonwebtoken');
 const {SECRET_KEY} = require('../config');
 
 function createToken(user){
-    console.assert(user.isAdmin !== undefined,
+    console.assert(user.isadmin !== undefined,
         'createToken passed user without isAdmin prop!');
     let payload = {
         username : user.username,
-        isAdmin : user.isAdmin || false
+        isAdmin : user.isadmin || false
     };
     return jwt.sign(payload, SECRET_KEY);
 }

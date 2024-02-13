@@ -1,6 +1,6 @@
 const express = require('express');
 const router = new express.Router();
-
+const {isAdminOrUserForData} = require('../middleware/auth');
 const Trait = require('../models/Trait');
 
 /**
@@ -20,9 +20,8 @@ router.get('/:id', async (req,res,next)=>{
 /**
  * POST / {charId, name, source, desc} => {id, charID, name, source, desc}
  * 
- * No auth req'd
  */
-router.post('/', async (req,res,next)=>{
+router.post('/', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const trait = await Trait.post(req.body);
         return res.json({trait});
@@ -34,7 +33,7 @@ router.post('/', async (req,res,next)=>{
 /**
  * PATCH /:id {data} = > {updated trait}
  */
-router.patch('/:id', async (req,res,next)=>{
+router.patch('/:id', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const trait = await Trait.patch(req.body);
         return res.json({trait});
@@ -46,7 +45,7 @@ router.patch('/:id', async (req,res,next)=>{
 /**
  * DELETE /:id => id
  */
-router.delete('/:id', async (req,res,next)=>{
+router.delete('/:id', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const id = await Trait.delete(req.params.id);
         return res.json({success : id});

@@ -2,6 +2,7 @@ const express = require('express');
 const router = new express.Router();
 
 const Attack = require('../models/Attack');
+const {isAdminOrUserForData} = require('../middleware/auth');
 
 /**
  * GET /:id => {...data}
@@ -20,9 +21,9 @@ router.get('/:id', async (req,res,next)=>{
 /**
  * POST / {...data} => {id, ...data}
  * 
- * No auth req'd
+ * Must be Admin or correct user
  */
-router.post('/', async (req,res,next)=>{
+router.post('/', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const attack = await Attack.post(req.body);
         return res.json({attack});
@@ -33,8 +34,10 @@ router.post('/', async (req,res,next)=>{
 
 /**
  * PATCH /:id {data} = > {updated attack}
+ * 
+ * Must be admin or correct user
  */
-router.patch('/:id', async (req,res,next)=>{
+router.patch('/:id', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const attack = await Attack.patch(req.body);
         return res.json({attack});
@@ -45,8 +48,10 @@ router.patch('/:id', async (req,res,next)=>{
 
 /**
  * DELETE /:id => id
+ * 
+ * Admin or correct user
  */
-router.delete('/:id', async (req,res,next)=>{
+router.delete('/:id', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const id = await Attack.delete(req.params.id);
         return res.json({success : id});

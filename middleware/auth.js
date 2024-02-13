@@ -12,7 +12,7 @@ function authJWT(req,res,next){
         const authHeader = req.headers && req.headers.authorization;
         if(authHeader){
             const token = authHeader.replace(/^[Bb]earer /, "").trim();
-            res.locals.user = jwt.verift(token, SECRET_KEY);
+            res.locals.user = jwt.verify(token, SECRET_KEY);
         }
         return next();
     }catch(e){
@@ -54,7 +54,7 @@ function isAdmin(req,res,next){
  */
 function isAdminOrUser(req,res,next){
     try{
-        if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.username === req.params.username))){
+        if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.id === req.params.id))){
             throw new UnauthorizedError();
         };
         return next();
@@ -63,9 +63,25 @@ function isAdminOrUser(req,res,next){
     };
 };
 
+/**
+ * Ensure a user is the correct user OR an admin for a data piece
+ */
+function isAdminOrUserForData(req,res,next){
+    try{
+        if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.id === req.body.userID))){
+            throw new UnauthorizedError();
+        };
+        delete req.body.userID;
+        return next();
+    }catch(e){
+        return next(e);
+    };
+}
+
 module.exports = {
     authJWT,
     isLoggedIn,
     isAdmin,
-    isAdminOrUser
+    isAdminOrUser,
+    isAdminOrUserForData
 }
