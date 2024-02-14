@@ -57,7 +57,7 @@ router.get('/user/:id', isAdminOrUser,async (req,res,next)=>{
 });
 
 /**
- * POST / {creatorID, charName, race, className, background, level, xp} => {character data}
+ * POST / {creatorID, charName, race, className, background, level, exp} => {character data}
  * Create a new character based on a small amount of starting data
  * This will be entered via a form client-side
  * Return the id for the client to redirect to the character page
@@ -92,7 +92,7 @@ router.patch('/:id', isAdminOrUserForData,async (req,res,next)=>{
  * DELETE /:id id => {success : id}
  * Delete a character
  */
-router.delete('/:id', async (req,res,next)=>{
+router.delete('/:id', isAdminOrUserForData, async (req,res,next)=>{
     try{
         const id = await Character.delete(req.params.id);
         return res.json({success : id});

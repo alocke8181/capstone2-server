@@ -13,7 +13,7 @@ const router = express.Router();
  * No auth required
  */
 
-router.post('/', async (req,res,next)=>{
+router.post('/', isAdmin, async (req,res,next)=>{
     try{
         const user = await User.post(req.body);
         const token = createToken(user);
