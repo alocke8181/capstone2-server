@@ -6,6 +6,7 @@ function createToken(user){
         'createToken passed user without isAdmin prop!');
     let payload = {
         username : user.username,
+        id : user.id,
         isAdmin : user.isadmin || false
     };
     return jwt.sign(payload, SECRET_KEY);

@@ -54,7 +54,9 @@ function isAdmin(req,res,next){
  */
 function isAdminOrUser(req,res,next){
     try{
-        if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.id === req.params.id))){
+        console.log(req.params.id);
+        console.log(res.locals.user);
+        if(!(res.locals.user && (res.locals.user.isAdmin || res.locals.user.id === parseInt(req.params.id)))){
             throw new UnauthorizedError();
         };
         return next();
