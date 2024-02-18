@@ -1,4 +1,4 @@
-#Capstone 2 Back-End Server
+# Capstone 2 Back-End Server
 
 This is the back-end server for my 2nd Capstone project: The Starting Tavern. This API allows user to create  Dungeons and Dragons characters. The repository for the front-end web application can be found [here](https://github.com/alocke8181/capstone2-app). The goal of this project is to demonstrate everything I learned in the second half of the Springboard Software Engineering Bootcamp. 
 
@@ -8,7 +8,7 @@ Many routes require some form of authorization. This is done via JSON Web Tokens
 
 The website is live [here](https://the-starting-tavern.onrender.com/). If it seems to be taking a long time to load it's because Render.com spins down free web pages and servers. So give it time to spin the app and server back up.
 
-##Routes
+## Routes
 * Authorization `/auth`
 	* `POST '/token' {username, password}` - Takes a username and password to login. On success, returns a JWT of the user and the user object. No authorization required.
 	* `POST '/register' {user}` - Takes a user object of `{username, password, email}`, creates a new user, and returns the token and user object. Uses JSON validation to make sure all information is correct. No authorization is required. 
@@ -41,13 +41,13 @@ The website is live [here](https://the-starting-tavern.onrender.com/). If it see
 	* `PATCH '/:id' {name, description}` - Patch an existing trait. Returns the updated trait object. Must be admin or user ID matches that for the character.
 	* `DELETE '/:id' {userID}` - Delete a trait. Must be admin or user ID matches that for the character.
 
-##Other Notes
+## Other Notes
 As previously mentioned, this server pulls data from an external API. This includes certain attributes about a character's race or class, or pre-existing traits, features, and spells. This is done as a convenience for the user, as entering in this information manually can be exhausting. **An important note however:** the external API does not include all D&D races and classes, only those in the *Player's Handbook*. This does limit the options a user has when creating characters. 
 
-##Long-Term Goals
+## Long-Term Goals
 One long-term goal is to have racial traits and class features be automatically added on character creation. This would make the process even faster as less data would need to be entered by the user.
 
 Another long-term goal is to either add other races/classes by storing their information internally, or allow the creation of custom races/classes. This would allow a much wider variety of characters that can be made, but would complicate things by also necessitating storing each race/class traits/features on the server too, to allow for the automatic adding of them.
 
-##Tools Used
+## Tools Used
 JavaScript, Node.js, Express, JSON Web Tokens, JSON Schema Verification, PostgreSQL.
