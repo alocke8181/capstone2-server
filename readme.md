@@ -6,6 +6,8 @@ Users can register an account and then create characters, as well as custom atta
 
 Many routes require some form of authorization. This is done via JSON Web Tokens. When a user logs in or registers, a JWT of the user is created and sent out. This must be returned via request headers for certain routes. The JWT is then verified and decoded by the server to allow for further authorization checks.
 
+The website is live [here](https://the-starting-tavern.onrender.com/). If it seems to be taking a long time to load it's because Render.com spins down free web pages and servers. So give it time to spin the app and server back up.
+
 ##Routes
 * Authorization `/auth`
 	* `POST '/token' {username, password}` - Takes a username and password to login. On success, returns a JWT of the user and the user object. No authorization required.
