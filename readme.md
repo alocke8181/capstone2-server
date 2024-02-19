@@ -41,6 +41,9 @@ The website is live [here](https://the-starting-tavern.onrender.com/). If it see
 	* `PATCH '/:id' {name, description}` - Patch an existing trait. Returns the updated trait object. Must be admin or user ID matches that for the character.
 	* `DELETE '/:id' {userID}` - Delete a trait. Must be admin or user ID matches that for the character.
 
+## Character Conversion
+Not all information about a character is stored on the database. Anything that can be calculated from another property or pulled from the external API is discarded before storing, and added back on retrieval. The conversions are done via the middleware functions `completeCharacterDataIn` and `completeCharacterDataOut`. When a character comes in, all calculated stats (modifiers, proficiency bonus, speed, etc.) are removed. Saving and Skill Proficiencies are joined together from arrays into strings. Traits, Features, Languages, Equipment, Attacks, and Spells are also converted from arrays of objects to strings of references. All of these strings are then converted back to arrays of objects when the Character is sent out. Attacks are pulled from the database. Spells are pulled from the external API. Traits and Features are pulled from either depending on whether they are standard or custom. Calls are also made to the external API to fill in the properties that were deleted when converting in.
+
 ## Other Notes
 As previously mentioned, this server pulls data from an external API. This includes certain attributes about a character's race or class, or pre-existing traits, features, and spells. This is done as a convenience for the user, as entering in this information manually can be exhausting. **An important note however:** the external API does not include all D&D races and classes, only those in the *Player's Handbook*. This does limit the options a user has when creating characters. 
 
