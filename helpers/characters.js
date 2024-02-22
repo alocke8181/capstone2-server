@@ -1,4 +1,3 @@
-
 /**
  * Static function to split a string or return null
  *  

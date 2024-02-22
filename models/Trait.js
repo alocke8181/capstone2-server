@@ -62,6 +62,9 @@ class Trait{
         return new Trait(results.rows[0]);
     };
 
+    /**
+     * Delete a custom trait and return the delete ID on success
+     */
     static async delete(id){
         const results = await db.query(`
             DELETE FROM custom_traits

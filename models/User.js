@@ -1,7 +1,6 @@
 const db = require('../db');
 
 const {NotFoundError, UnauthorizedError, BadRequestError} = require('../expressError');
-const {sqlForUpdate} = require('../helpers/sql');
 const bcrypt = require('bcrypt');
 const {BCRYPT_WORK_FACTOR} = require('../config');
 
@@ -46,7 +45,7 @@ class User{
             (username, password, email, isAdmin)
             VALUES ($1, $2, $3, $4)
             RETURNING id, username, email, isAdmin`,
-            [username, password, email, isAdmin]);
+            [username, hashPwd, email, isAdmin]);
 
         const user = result.rows[0];
         return user;
@@ -77,6 +76,9 @@ class User{
         return results.rows[0];
     };
 
+    /**
+     * Patch a user's info
+     */
     static async patch(id, data){
         const password = await bcrypt.hash(data.password, BCRYPT_WORK_FACTOR);
         const email = data.email;
@@ -92,6 +94,9 @@ class User{
         return results.rows[0];
     };
 
+    /**
+     * Delete a user
+     */
     static async delete(id){
         const results = await db.query(`
             DELETE FROM users

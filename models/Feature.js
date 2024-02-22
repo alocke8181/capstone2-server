@@ -62,6 +62,9 @@ class Feature{
         return new Feature(results.rows[0]);
     };
 
+    /**
+     * Delete a custom feature and return the deleted ID on success
+     */
     static async delete(id){
         const results = await db.query(`
             DELETE FROM custom_features

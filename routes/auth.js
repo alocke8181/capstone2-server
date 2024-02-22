@@ -7,7 +7,6 @@ const jsonschema = require('jsonschema');
 const userRegisterSchema = require('../schemas/userRegister.json');
 
 /** POST /auth/token: {username, password} => {token, user}
- * Add validation later
  */
 router.post('/token', async (req,res,next)=>{
     try{
